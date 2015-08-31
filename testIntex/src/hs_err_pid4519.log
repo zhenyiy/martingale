@@ -1,0 +1,420 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGFPE (0x8) at pc=0x00002b5dece6680f, pid=4519, tid=1074792768
+#
+# JRE version: Java(TM) SE Runtime Environment (7.0_51-b13) (build 1.7.0_51-b13)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (24.51-b03 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# C  [ld-linux-x86-64.so.2+0x880f]  do_lookup_x+0xcf
+#
+# Core dump written. Default location: /vn_le/en2_data_d/intex/test_intex/testIntex2/src/core or core.4519
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000000000060a000):  JavaThread "main" [_thread_in_native, id=4520, stack(0x0000000040000000,0x0000000040101000)]
+
+siginfo:si_signo=SIGFPE: si_errno=0, si_code=1 (FPE_INTDIV), si_addr=0x00002b5dece6680f
+
+Registers:
+RAX=0x00000000043e4d73, RBX=0x0000000000000000, RCX=0x00000000400fe890, RDX=0x0000000000000000
+RSP=0x00000000400fe730, RBP=0x00000000400fe8d0, RSI=0x00000000043e4d73, RDI=0x00002aaab4d6505f
+R8 =0x00002aaab3b49920, R9 =0x0000000000000000, R10=0x0000000000000000, R11=0xffffffffffffffff
+R12=0x00000000400fe890, R13=0x00002aaab3b49670, R14=0x0000000000000000, R15=0x00002aaab3d0c400
+RIP=0x00002b5dece6680f, EFLAGS=0x0000000000010246, CSGSFS=0x0000000000000033, ERR=0x0000000000000000
+  TRAPNO=0x0000000000000000
+
+Top of Stack: (sp=0x00000000400fe730)
+0x00000000400fe730:   00002aaab3b49fb0 0000000000000000
+0x00000000400fe740:   00000000400fe890 00002aaab4d64fb0
+0x00000000400fe750:   00000000043e4d73 00002aaab4d6505f
+0x00000000400fe760:   0000000000000009 00002aaab3d0d420
+0x00000000400fe770:   00002aaab3d0e8ec 00000000b3f18170
+0x00000000400fe780:   0000000000000000 00002aaab3b7b130
+0x00000000400fe790:   0000000000000002 ff108be5707857ac
+0x00000000400fe7a0:   ff10a0b8dc911427 00002aaab3b7afb0
+0x00000000400fe7b0:   00000000400fe8d0 00000000400fe890
+0x00000000400fe7c0:   00000000043e4d73 0000000000000000
+0x00000000400fe7d0:   0000000000000000 00002b5dece66be6
+0x00000000400fe7e0:   0000000000000000 0000000000000001
+0x00000000400fe7f0:   0000000000000000 0000005f00000000
+0x00000000400fe800:   0000006300000060 0000006600000064
+0x00000000400fe810:   0000000000000000 0000000000000000
+0x00000000400fe820:   0000000000000001 00002aaab3b7afa8
+0x00000000400fe830:   00000000400fe988 00002aaab3b7ac60
+0x00000000400fe840:   00002aaab4d6505f 00002b5ded3c4d44
+0x00000000400fe850:   0000000000000001 00002b5dece6b9a5
+0x00000000400fe860:   00000000400fe880 00000000400fe8c3
+0x00000000400fe870:   0000000000000108 00002aaab3b48c20
+0x00000000400fe880:   0000008a00000001 00002aaab3b49670
+0x00000000400fe890:   0000000000000000 0000000000000000
+0x00000000400fe8a0:   000000000000008f 00002aaab3b7ac60
+0x00000000400fe8b0:   00002aaab4d64000 00002aaab3b7ac60
+0x00000000400fe8c0:   0000000000000006 00002aaab4d65950
+0x00000000400fe8d0:   00000000400fe9c0 00002b5dece68228
+0x00000000400fe8e0:   0000000000000001 0000000000000000
+0x00000000400fe8f0:   00002aaab4d64fb0 00002aaab3b7ac60
+0x00000000400fe900:   00002aaab3b7afa8 0000000000000000
+0x00000000400fe910:   0000000000000000 00002aaab4e70a60
+0x00000000400fe920:   00002aaab4d6563e 00002aaab4d65980 
+
+Instructions: (pc=0x00002b5dece6680f)
+0x00002b5dece667ef:   44 24 38 49 8b 9d 20 03 00 00 48 8b 44 24 20 48
+0x00002b5dece667ff:   89 5c 24 40 41 8b 95 d8 02 00 00 48 89 d3 31 d2
+0x00002b5dece6680f:   48 f7 f3 49 8b 85 e0 02 00 00 44 8b 24 90 45 85
+0x00002b5dece6681f:   e4 0f 84 87 01 00 00 c7 44 24 4c 00 00 00 00 48 
+
+Register to memory mapping:
+
+RAX=0x00000000043e4d73 is an unknown value
+RBX=0x0000000000000000 is an unknown value
+RCX=0x00000000400fe890 is pointing into the stack for thread: 0x000000000060a000
+RDX=0x0000000000000000 is an unknown value
+RSP=0x00000000400fe730 is pointing into the stack for thread: 0x000000000060a000
+RBP=0x00000000400fe8d0 is pointing into the stack for thread: 0x000000000060a000
+RSI=0x00000000043e4d73 is an unknown value
+RDI=0x00002aaab4d6505f: <offset 0x105f> in /lib64/libgcc_s.so.1 at 0x00002aaab4d64000
+R8 =0x00002aaab3b49920 is an unknown value
+R9 =0x0000000000000000 is an unknown value
+R10=0x0000000000000000 is an unknown value
+R11=0xffffffffffffffff is an unknown value
+R12=0x00000000400fe890 is pointing into the stack for thread: 0x000000000060a000
+R13=0x00002aaab3b49670 is an unknown value
+R14=0x0000000000000000 is an unknown value
+R15=0x00002aaab3d0c400: wcmo_collcf+0x400 in /vn_le/en2_data_d/intex/test_intex/testIntex2/src/libIntexWrapJNI.so at 0x00002aaab3d0c000
+
+
+Stack: [0x0000000040000000,0x0000000040101000],  sp=0x00000000400fe730,  free space=1017k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [ld-linux-x86-64.so.2+0x880f]  do_lookup_x+0xcf
+C  [ld-linux-x86-64.so.2+0xa228]  _dl_relocate_object+0x588
+C  [ld-linux-x86-64.so.2+0x105c5]  dl_open_worker+0x3d5
+C  [ld-linux-x86-64.so.2+0xc4c6]  _dl_catch_error+0x66
+C  [libdl.so.2+0x11fa]  dlopen_doit+0x6a
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  java.lang.ClassLoader$NativeLibrary.load(Ljava/lang/String;)V+0
+j  java.lang.ClassLoader.loadLibrary1(Ljava/lang/Class;Ljava/io/File;)Z+302
+j  java.lang.ClassLoader.loadLibrary0(Ljava/lang/Class;Ljava/io/File;)Z+2
+j  java.lang.ClassLoader.loadLibrary(Ljava/lang/Class;Ljava/lang/String;Z)V+268
+j  java.lang.Runtime.loadLibrary0(Ljava/lang/Class;Ljava/lang/String;)V+54
+j  java.lang.System.loadLibrary(Ljava/lang/String;)V+7
+j  IntexWrapTest2.<clinit>()V+23
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00002aaab3b28800 JavaThread "Service Thread" daemon [_thread_blocked, id=4529, stack(0x0000000040909000,0x0000000040a0a000)]
+  0x00002aaab3b26000 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=4528, stack(0x0000000040808000,0x0000000040909000)]
+  0x00002aaab3b23000 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=4527, stack(0x0000000040707000,0x0000000040808000)]
+  0x00002aaab3b21000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=4526, stack(0x0000000040606000,0x0000000040707000)]
+  0x000000000066c000 JavaThread "Finalizer" daemon [_thread_blocked, id=4525, stack(0x0000000040505000,0x0000000040606000)]
+  0x0000000000668000 JavaThread "Reference Handler" daemon [_thread_blocked, id=4524, stack(0x0000000040404000,0x0000000040505000)]
+=>0x000000000060a000 JavaThread "main" [_thread_in_native, id=4520, stack(0x0000000040000000,0x0000000040101000)]
+
+Other Threads:
+  0x0000000000665800 VMThread [stack: 0x0000000040303000,0x0000000040404000] [id=4523]
+  0x00002aaab3b33800 WatcherThread [stack: 0x0000000040a0a000,0x0000000040b0b000] [id=4530]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ PSYoungGen      total 37376K, used 645K [0x00000007d6b00000, 0x00000007d9480000, 0x0000000800000000)
+  eden space 32256K, 2% used [0x00000007d6b00000,0x00000007d6ba14e8,0x00000007d8a80000)
+  from space 5120K, 0% used [0x00000007d8f80000,0x00000007d8f80000,0x00000007d9480000)
+  to   space 5120K, 0% used [0x00000007d8a80000,0x00000007d8a80000,0x00000007d8f80000)
+ ParOldGen       total 84480K, used 0K [0x0000000784200000, 0x0000000789480000, 0x00000007d6b00000)
+  object space 84480K, 0% used [0x0000000784200000,0x0000000784200000,0x0000000789480000)
+ PSPermGen       total 21504K, used 2577K [0x000000077f000000, 0x0000000780500000, 0x0000000784200000)
+  object space 21504K, 11% used [0x000000077f000000,0x000000077f284678,0x0000000780500000)
+
+Card table byte_map: [0x00002aaaae2df000,0x00002aaaae6e8000] byte_map_base: 0x00002aaaaa6e7000
+
+Polling page: 0x00002aaaaaffa000
+
+Code Cache  [0x00002aaaab21f000, 0x00002aaaab48f000, 0x00002aaaae21f000)
+ total_blobs=166 nmethods=0 adapters=136 free_code_cache=48773Kb largest_free_block=49943744
+
+Compilation events (0 events):
+No events
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (4 events):
+Event: 0.047 Thread 0x000000000060a000 Threw 0x00000007d6b102e8 at /HUDSON/workspace/7u-2-build-linux-amd64@2/jdk7u51/527/hotspot/src/share/vm/prims/jni.cpp:3991
+Event: 0.135 Thread 0x000000000060a000 Threw 0x00000007d6b499c0 at /HUDSON/workspace/7u-2-build-linux-amd64@2/jdk7u51/527/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.156 Thread 0x000000000060a000 Threw 0x00000007d6b63e48 at /HUDSON/workspace/7u-2-build-linux-amd64@2/jdk7u51/527/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.160 Thread 0x000000000060a000 Threw 0x00000007d6b69728 at /HUDSON/workspace/7u-2-build-linux-amd64@2/jdk7u51/527/hotspot/src/share/vm/prims/jvm.cpp:1244
+
+Events (10 events):
+Event: 0.158 loading class 0x00002aaab3b2c430
+Event: 0.158 loading class 0x00002aaab3b2c430 done
+Event: 0.158 loading class 0x00002aaab2e883f0
+Event: 0.159 loading class 0x00002aaab2e883f0 done
+Event: 0.160 loading class 0x00002aaab3b503b0
+Event: 0.160 loading class 0x00002aaab3b503b0 done
+Event: 0.163 loading class 0x00002aaab2e8bcf0
+Event: 0.163 loading class 0x00002aaab2e8bcf0 done
+Event: 0.163 loading class 0x00002aaab2e8bc90
+Event: 0.164 loading class 0x00002aaab2e8bc90 done
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 fd:05 2064809                            /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/bin/java
+00600000-00601000 rw-p 00000000 fd:05 2064809                            /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/bin/java
+00601000-00689000 rw-p 00601000 00:00 0                                  [heap]
+40000000-40003000 ---p 40000000 00:00 0 
+40003000-40101000 rw-p 40003000 00:00 0 
+40101000-40102000 ---p 40101000 00:00 0 
+40102000-40202000 rw-p 40102000 00:00 0 
+40202000-40203000 ---p 40202000 00:00 0 
+40203000-40303000 rw-p 40203000 00:00 0 
+40303000-40304000 ---p 40303000 00:00 0 
+40304000-40404000 rw-p 40304000 00:00 0 
+40404000-40407000 ---p 40404000 00:00 0 
+40407000-40505000 rw-p 40407000 00:00 0 
+40505000-40508000 ---p 40505000 00:00 0 
+40508000-40606000 rw-p 40508000 00:00 0 
+40606000-40609000 ---p 40606000 00:00 0 
+40609000-40707000 rw-p 40609000 00:00 0 
+40707000-4070a000 ---p 40707000 00:00 0 
+4070a000-40808000 rw-p 4070a000 00:00 0 
+40808000-4080b000 ---p 40808000 00:00 0 
+4080b000-40909000 rw-p 4080b000 00:00 0 
+40909000-4090c000 ---p 40909000 00:00 0 
+4090c000-40a0a000 rw-p 4090c000 00:00 0 
+40a0a000-40a0b000 ---p 40a0a000 00:00 0 
+40a0b000-40b0b000 rw-p 40a0b000 00:00 0 
+77f000000-780500000 rw-p 77f000000 00:00 0 
+780500000-784200000 rw-p 780500000 00:00 0 
+784200000-789480000 rw-p 784200000 00:00 0 
+789480000-7d6b00000 rw-p 789480000 00:00 0 
+7d6b00000-7d9480000 rw-p 7d6b00000 00:00 0 
+7d9480000-800000000 rw-p 7d9480000 00:00 0 
+2aaaaaaab000-2aaaaaaac000 r--s 00002000 00:18 25805947533                /vn_le/en2_data_d/intex/test_intex/testIntex2/IntexWrap.jar
+2aaaaaab8000-2aaaaaac0000 r-xp 00000000 fd:03 180262                     /lib64/librt-2.4.so
+2aaaaaac0000-2aaaaabbf000 ---p 00008000 fd:03 180262                     /lib64/librt-2.4.so
+2aaaaabbf000-2aaaaabc1000 rw-p 00007000 fd:03 180262                     /lib64/librt-2.4.so
+2aaaaabc1000-2aaaaabce000 r-xp 00000000 fd:05 2065006                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/libverify.so
+2aaaaabce000-2aaaaadcd000 ---p 0000d000 fd:05 2065006                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/libverify.so
+2aaaaadcd000-2aaaaadcf000 rw-p 0000c000 fd:05 2065006                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/libverify.so
+2aaaaadcf000-2aaaaadf8000 r-xp 00000000 fd:05 2064977                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/libjava.so
+2aaaaadf8000-2aaaaaff8000 ---p 00029000 fd:05 2064977                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/libjava.so
+2aaaaaff8000-2aaaaaffa000 rw-p 00029000 fd:05 2064977                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/libjava.so
+2aaaaaffa000-2aaaaaffb000 r--p 2aaaaaffa000 00:00 0 
+2aaaaaffb000-2aaaaaffc000 rw-p 2aaaaaffb000 00:00 0 
+2aaaaaffc000-2aaaab004000 rw-s 00000000 00:10 44255527                   /tmp/hsperfdata_en2devl/4519
+2aaaab004000-2aaaab01e000 r-xp 00000000 fd:05 2065007                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/libzip.so
+2aaaab01e000-2aaaab21e000 ---p 0001a000 fd:05 2065007                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/libzip.so
+2aaaab21e000-2aaaab21f000 rw-p 0001a000 fd:05 2065007                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/libzip.so
+2aaaab21f000-2aaaab48f000 rwxp 2aaaab21f000 00:00 0 
+2aaaab48f000-2aaaae21f000 rw-p 2aaaab48f000 00:00 0 
+2aaaae21f000-2aaaae229000 rw-p 2aaaae21f000 00:00 0 
+2aaaae229000-2aaaae2df000 rw-p 2aaaae229000 00:00 0 
+2aaaae2df000-2aaaae2ea000 rw-p 2aaaae2df000 00:00 0 
+2aaaae2ea000-2aaaae308000 rw-p 2aaaae2ea000 00:00 0 
+2aaaae308000-2aaaae332000 rw-p 2aaaae308000 00:00 0 
+2aaaae332000-2aaaae59c000 rw-p 2aaaae332000 00:00 0 
+2aaaae59c000-2aaaae5b2000 rw-p 2aaaae59c000 00:00 0 
+2aaaae5b2000-2aaaae6e7000 rw-p 2aaaae5b2000 00:00 0 
+2aaaae6e7000-2aaaae712000 rw-p 2aaaae6e7000 00:00 0 
+2aaaae712000-2aaaae97d000 rw-p 2aaaae712000 00:00 0 
+2aaaae97d000-2aaaae988000 rw-p 2aaaae97d000 00:00 0 
+2aaaae988000-2aaaae9a6000 rw-p 2aaaae988000 00:00 0 
+2aaaae9a6000-2aaab2f50000 rw-p 2aaaae9a6000 00:00 0 
+2aaab2f50000-2aaab310d000 r--s 039bf000 fd:05 2064955                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/rt.jar
+2aaab310d000-2aaab3ac4000 rw-p 2aaab310d000 00:00 0 
+2aaab3ac4000-2aaab3ac5000 r--p 00000000 fd:03 659631                     /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
+2aaab3ac5000-2aaab3acc000 r--s 00000000 fd:03 659023                     /usr/lib64/gconv/gconv-modules.cache
+2aaab3acc000-2aaab3acd000 r--p 00000000 fd:03 659643                     /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
+2aaab3acd000-2aaab3ace000 r--p 00000000 fd:03 659641                     /usr/lib/locale/en_US.utf8/LC_TELEPHONE
+2aaab3ace000-2aaab3acf000 r--p 00000000 fd:03 657047                     /usr/lib/locale/en_US.utf8/LC_ADDRESS
+2aaab3acf000-2aaab3ad0000 r--p 00000000 fd:03 659642                     /usr/lib/locale/en_US.utf8/LC_NAME
+2aaab3ad0000-2aaab3ad1000 r--p 00000000 fd:03 659267                     /usr/lib/locale/en_US.utf8/LC_PAPER
+2aaab3ad1000-2aaab3ad2000 r--p 00000000 fd:03 659426                     /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+2aaab3ad2000-2aaab3ad3000 r--p 00000000 fd:03 659632                     /usr/lib/locale/en_US.utf8/LC_MONETARY
+2aaab3b00000-2aaab3b82000 rw-p 2aaab3b00000 00:00 0 
+2aaab3b82000-2aaab3c00000 ---p 2aaab3b82000 00:00 0 
+2aaab3c00000-2aaab3cd7000 r--p 00000000 fd:03 659653                     /usr/lib/locale/en_US.utf8/LC_COLLATE
+2aaab3cd7000-2aaab3cd8000 r--p 00000000 fd:03 659633                     /usr/lib/locale/en_US.utf8/LC_TIME
+2aaab3cd8000-2aaab3cd9000 r--p 00000000 fd:03 659436                     /usr/lib/locale/en_US.utf8/LC_NUMERIC
+2aaab3cd9000-2aaab3d0c000 r--p 00000000 fd:03 659461                     /usr/lib/locale/en_US.utf8/LC_CTYPE
+2aaab3d0c000-2aaab3d19000 r-xp 00000000 00:18 12921062945                /vn_le/en2_data_d/intex/test_intex/testIntex2/src/libIntexWrapJNI.so
+2aaab3d19000-2aaab3f18000 ---p 0000d000 00:18 12921062945                /vn_le/en2_data_d/intex/test_intex/testIntex2/src/libIntexWrapJNI.so
+2aaab3f18000-2aaab3f19000 rw-p 0000c000 00:18 12921062945                /vn_le/en2_data_d/intex/test_intex/testIntex2/src/libIntexWrapJNI.so
+2aaab3f19000-2aaab486d000 r-xp 00000000 00:18 12921062946                /vn_le/en2_data_d/intex/test_intex/testIntex2/src/libvcmowrap.so
+2aaab486d000-2aaab4a6c000 ---p 00954000 00:18 12921062946                /vn_le/en2_data_d/intex/test_intex/testIntex2/src/libvcmowrap.so
+2aaab4a6c000-2aaab4ac9000 rw-p 00953000 00:18 12921062946                /vn_le/en2_data_d/intex/test_intex/testIntex2/src/libvcmowrap.so
+2aaab4ac9000-2aaab4b5b000 rw-p 2aaab4ac9000 00:00 0 
+2aaab4b5b000-2aaab4b66000 r--p 00000000 fd:03 725032                     /etc/ld.so.cache
+2aaab4b66000-2aaab4c49000 r-xp 00000000 fd:03 645776                     /usr/lib64/libstdc++.so.6.0.8
+2aaab4c49000-2aaab4d49000 ---p 000e3000 fd:03 645776                     /usr/lib64/libstdc++.so.6.0.8
+2aaab4d49000-2aaab4d52000 rw-p 000e3000 fd:03 645776                     /usr/lib64/libstdc++.so.6.0.8
+2aaab4d52000-2aaab4d64000 rw-p 2aaab4d52000 00:00 0 
+2aaab4d64000-2aaab4d71000 r-xp 00000000 fd:03 180297                     /lib64/libgcc_s.so.1
+2aaab4d71000-2aaab4e70000 ---p 0000d000 fd:03 180297                     /lib64/libgcc_s.so.1
+2aaab4e70000-2aaab4e71000 rw-p 0000c000 fd:03 180297                     /lib64/libgcc_s.so.1
+2aaab4e71000-2aaab4e73000 rw-p 2aaab4e71000 00:00 0 
+2b5dece5e000-2b5dece79000 r-xp 00000000 fd:03 180526                     /lib64/ld-2.4.so
+2b5dece79000-2b5dece7b000 rw-p 2b5dece79000 00:00 0 
+2b5decf79000-2b5decf7b000 rw-p 0001b000 fd:03 180526                     /lib64/ld-2.4.so
+2b5decf7b000-2b5decf8f000 r-xp 00000000 fd:03 180258                     /lib64/libpthread-2.4.so
+2b5decf8f000-2b5ded08e000 ---p 00014000 fd:03 180258                     /lib64/libpthread-2.4.so
+2b5ded08e000-2b5ded090000 rw-p 00013000 fd:03 180258                     /lib64/libpthread-2.4.so
+2b5ded090000-2b5ded094000 rw-p 2b5ded090000 00:00 0 
+2b5ded094000-2b5ded0aa000 r-xp 00000000 fd:05 2065606                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/lib/amd64/jli/libjli.so
+2b5ded0aa000-2b5ded2aa000 ---p 00016000 fd:05 2065606                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/lib/amd64/jli/libjli.so
+2b5ded2aa000-2b5ded2ab000 rw-p 00016000 fd:05 2065606                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/lib/amd64/jli/libjli.so
+2b5ded2ab000-2b5ded2ac000 rw-p 2b5ded2ab000 00:00 0 
+2b5ded2ac000-2b5ded2ae000 r-xp 00000000 fd:03 180238                     /lib64/libdl-2.4.so
+2b5ded2ae000-2b5ded3ae000 ---p 00002000 fd:03 180238                     /lib64/libdl-2.4.so
+2b5ded3ae000-2b5ded3b0000 rw-p 00002000 fd:03 180238                     /lib64/libdl-2.4.so
+2b5ded3b0000-2b5ded4ea000 r-xp 00000000 fd:03 180232                     /lib64/libc-2.4.so
+2b5ded4ea000-2b5ded5ea000 ---p 0013a000 fd:03 180232                     /lib64/libc-2.4.so
+2b5ded5ea000-2b5ded5ed000 r--p 0013a000 fd:03 180232                     /lib64/libc-2.4.so
+2b5ded5ed000-2b5ded5ef000 rw-p 0013d000 fd:03 180232                     /lib64/libc-2.4.so
+2b5ded5ef000-2b5ded5f6000 rw-p 2b5ded5ef000 00:00 0 
+2b5ded5f6000-2b5dee158000 r-xp 00000000 fd:05 2065011                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/server/libjvm.so
+2b5dee158000-2b5dee358000 ---p 00b62000 fd:05 2065011                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/server/libjvm.so
+2b5dee358000-2b5dee41b000 rw-p 00b62000 fd:05 2065011                    /export/webapps/scommon/jdk/jdk1.7.0_51-x86_64/jre/lib/amd64/server/libjvm.so
+2b5dee41b000-2b5dee45c000 rw-p 2b5dee41b000 00:00 0 
+2b5dee467000-2b5dee4bb000 r-xp 00000000 fd:03 180240                     /lib64/libm-2.4.so
+2b5dee4bb000-2b5dee5ba000 ---p 00054000 fd:03 180240                     /lib64/libm-2.4.so
+2b5dee5ba000-2b5dee5bc000 rw-p 00053000 fd:03 180240                     /lib64/libm-2.4.so
+7fff20afc000-7fff20b11000 rw-p 7fff20afc000 00:00 0                      [stack]
+7fff20bff000-7fff20c00000 r-xp 7fff20bff000 00:00 0 
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vdso]
+
+VM Arguments:
+java_command: IntexWrapTest2
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/usr/fnma/bin:/bin:/usr/bin:/usr/SYSADM/bin
+USERNAME=en2devl
+LD_LIBRARY_PATH=/vn_le/en2_data_d/intex/test_intex/testIntex2/src/
+SHELL=/bin/csh
+HOSTTYPE=x86_64
+OSTYPE=linux
+MACHTYPE=x86_64-suse-linux
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x993870], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x993870], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x8105b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: [libjvm.so+0x8105b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGXFSZ: [libjvm.so+0x8105b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x8105b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x811aa0], sa_mask[0]=0x00000000, sa_flags=0x10000004
+SIGHUP: [libjvm.so+0x812a10], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGINT: [libjvm.so+0x812a10], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGTERM: [libjvm.so+0x812a10], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGQUIT: [libjvm.so+0x812a10], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+
+
+---------------  S Y S T E M  ---------------
+
+OS:SUSE Linux Enterprise Server 10 (x86_64)
+VERSION = 10
+PATCHLEVEL = 4
+
+uname:Linux 2.6.16.60-0.103.1-smp #1 SMP Thu May 16 19:52:34 UTC 2013 x86_64
+libc:glibc 2.4 NPTL 2.4 
+rlimit: STACK 8192k, CORE infinity, NPROC 63338, NOFILE 8192, AS infinity
+load average:0.40 0.59 0.58
+
+/proc/meminfo:
+MemTotal:      8111088 kB
+MemFree:         50028 kB
+Buffers:          4476 kB
+Cached:        7381704 kB
+SwapCached:          0 kB
+Active:         604548 kB
+Inactive:      7304588 kB
+HighTotal:           0 kB
+HighFree:            0 kB
+LowTotal:      8111088 kB
+LowFree:         50028 kB
+SwapTotal:     1052216 kB
+SwapFree:      1041028 kB
+Dirty:             288 kB
+Writeback:          24 kB
+AnonPages:      522304 kB
+Mapped:          72904 kB
+Slab:            74796 kB
+CommitLimit:   5107760 kB
+Committed_AS:  1784468 kB
+PageTables:       7344 kB
+VmallocTotal: 34359738367 kB
+VmallocUsed:    268052 kB
+VmallocChunk: 34359469819 kB
+HugePages_Total:     0
+HugePages_Free:      0
+HugePages_Rsvd:      0
+Hugepagesize:     2048 kB
+
+
+CPU:total 2 (1 cores per cpu, 1 threads per core) family 6 model 37 stepping 1, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, aes, tsc, tscinvbit
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 37
+model name	:        Intel(R) Xeon(R) CPU E7-L8867  @ 2.13GHz
+stepping	: 1
+cpu MHz		: 2128.890
+cache size	: 30720 KB
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 11
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss syscall nx rdtscp lm rep_good constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf pni pclmulqdq ssse3 cx16 sse4_1 sse4_2 popcnt aes hypervisor lahf_lm ida arat epb dts
+bogomips	: 4257.78
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 37
+model name	:        Intel(R) Xeon(R) CPU E7-L8867  @ 2.13GHz
+stepping	: 1
+cpu MHz		: 2128.890
+cache size	: 30720 KB
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 11
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss syscall nx rdtscp lm rep_good constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf pni pclmulqdq ssse3 cx16 sse4_1 sse4_2 popcnt aes hypervisor lahf_lm ida arat epb dts
+bogomips	: 4257.78
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 8111088k(50028k free), swap 1052216k(1041028k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (24.51-b03) for linux-amd64 JRE (1.7.0_51-b13), built on Dec 18 2013 18:48:01 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Tue Jul  1 12:47:48 2014
+elapsed time: 0 seconds
+

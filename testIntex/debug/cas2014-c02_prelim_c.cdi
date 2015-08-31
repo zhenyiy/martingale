@@ -1,0 +1,764 @@
+!  CAS2014_C02_PRELIM_OPTA.CDI  #CMOVER_3.2B WHOLE_LOAN  !  MAX_CF_VECTSIZE 620 
+!
+!! Created by Intex Deal Maker v5.1.024  ,  subroutines 3.3e_p1
+!!   05/07/2014   6:39 PM
+!
+DEAL_COMMENT _
+"The information contained in the attached materials (the 'Information') has been provided by Credit Suisse Securities (USA) LLC ('CS') and is preliminary and subject to change. The Information does not include all of the information relating to the securities. As such, the Information may not reflect the impact of all structural characteristics of the securities. The assumptions underlying the Information, including structure and collateral, may be modified from time to time to reflect changed circumstances. Prospective purchasers are recommended to review the final private placement memorandum relating to the securities discussed in this communication. The final private placement memorandum will contain data that is current as of their publication dates and after publication may no longer be complete or current. A final private placement memorandum may be obtained from CS by calling toll-free 1-800-221-1037.; _
+; _
+The Information is preliminary and subject to final collateral, structural, accounting and legal review.  The analyses, calculations and valuations herein are based on certain assumptions and data provided by third parties that may vary from the actual characteristics of the final collateral pool relating to the securities. None of CS, the depositor or the issuer has verified these analyses, calculations or valuations. Material contained within the Information may also be based on assumptions regarding market conditions and other matters as reflected herein, and such assumptions may not coincide with actual market conditions or events. None of CS, the depositor or the issuer has undertaken to update or amend the Information since the date it was issued. More current information may be available publicly from other sources.; _
+; _
+The securities are being offered when, as and if issued.  In particular, you are advised that these securities, and the asset pool backing them, are subject to modification or revision (including, among other things, the possibility that one or more classes of securities may be split, combined or eliminated), at any time prior to issuance or availability of the final private placement memorandum.  Any decision to invest in the securities described herein should be made after reviewing the final private placement memorandum, conducting such investigations as the investor deems necessary and consulting the investor's own legal, accounting, and tax advisors in order to make an independent determination of the suitability and consequences of an investment in the securities.  ; _
+; _
+The investment described in this term sheet is a structured financial product.  These securities are complex instruments intended for sale only to sophisticated investors who understand and assume the risks involved with the purchase thereof.  The risks associated with the securities may significantly reduce an investor's expected yield and expected return of principal, and/or reduce an investor's ability to sell or obtain market value information about the securities.  Investors should independently evaluate the risks associated with the securities and consult their own professional advisors. These risks may include, but may not be limited to the following:; _
+o	The performance of the collateral may be correlated with economic or other factors that may diminish the value of the securities.; _
+o	The performance of the collateral and the value of the securities may be largely dependent on the quality of the origination, performance history, and servicing of the collateral.; _
+o	The value of the securities may be diminished by market conditions unrelated to the performance of the securities.; _
+; _
+Prior to entering into any transaction, you should determine, without reliance upon CS or its affiliates, the economic risks and merits, as well as the legal, tax and accounting characterizations and consequences of the transaction, and independently determine that you are able to assume these risks.  In this regard, by acceptance of these materials, you acknowledge that you have been advised that (a) CS is not in the business of providing legal, tax or accounting advice, (b) you understand that there may be legal, tax or accounting risks associated with the transaction,  (c) you should receive legal, tax and accounting advice from advisors with appropriate expertise to assess relevant risks, and (d) you should apprise senior management in your organization as to the legal, tax and accounting advice (and, if applicable, risks) associated with this transaction and CS' disclaimers as to these matters. ; _
+; _
+The Information may not be forwarded or provided by you to any other person. An investor or potential investor in the securities (and each employee, representative, or other agent of such person or entity) may disclose to any and all persons, without limitation, the tax treatment and tax structure of the transaction (as defined in United States Treasury Regulation Section 1.6011-4) and all related materials of any kind, including opinions or other tax analyses, that are provided to such person or entity. However, such person or entity may not disclose any other information relating to this transaction unless such information is related to such tax treatment and tax structure.; _
+; _
+CIRCULAR 230 DISCLOSURE; _
+; _
+TO ENSURE COMPLIANCE WITH REQUIREMENTS IMPOSED BY THE INTERNAL REVENUE SERVICE, WE INFORM YOU THAT (A) ANY UNITED STATES FEDERAL TAX ADVICE CONTAINED HEREIN (INCLUDING ANY ATTACHMENTS OR ENCLOSURES) WAS NOT INTENDED OR WRITTEN TO BE USED, AND CANNOT BE USED, FOR THE PURPOSE OF AVOIDING UNITED STATES FEDERAL TAX PENALTIES, (B) ANY SUCH ADVICE WAS WRITTEN TO SUPPORT THE PROMOTION OR MARKETING OF THE TRANSACTIONS OR MATTERS ADDRESSED HEREIN AND (C) ANY TAXPAYER TO WHOM THE TRANSACTIONS OR MATTERS ARE BEING PROMOTED, MARKETED OR RECOMMENDED SHOULD SEEK ADVICE BASED ON ITS PARTICULAR CIRCUMSTANCES FROM AN INDEPENDENT TAX ADVISOR."
+!
+!  Modeled in the Intex CMO Modeling Language, (USD09544500)
+!  which is copyright (c) 2014 by Intex Solutions, Inc.
+!  Intex shall not be held liable for the accuracy of this data
+!  nor for the accuracy of information which is derived from this data.
+!
+ COLLAT_GROUPS 1 2 
+!
+  DEFINE PREPAY PPC GROUP 1 RISE_PERS 1 START_CPR 10 END_CPR 10
+  DEFINE PREPAY PPC GROUP 2 RISE_PERS 1 START_CPR 10 END_CPR 10
+!
+  DEFINE CONSTANT #OrigCollBal = 60882235433.36
+  DEFINE CONSTANT #OrigCollBal1 = 46894398744.06
+  DEFINE CONSTANT #OrigCollBal2 = 13987836689.30
+!
+  DEFINE CONSTANT #OrigBondBal = 60882235433.36
+  DEFINE CONSTANT #OrigBondBal1 = 46894398744.00
+  DEFINE CONSTANT #OrigBondBal2 = 13987836689.00
+!
+!
+   FULL_DEALNAME:        cas2014-c02_prelim_c
+   SERVICER_MASTER:      Fannie Mae
+!
+   ISSUER:               Fannie Mae
+   DEALER:               Credit Suisse
+   DEAL SIZE:            60882235433.00
+   PRICING SPEED:        10 CPR
+!  ISSUE DATE:           20140501
+   SETTLEMENT DATE:      20140528
+!
+  Record date delay:     24
+!
+ DEFINE TR_INDEXDEPS_ALL
+!
+DEFINE TRANCHE "1AH", "1M1", "1M1H", "1M2", "1M2H", "1BH", "2AH", "2M1", "2M1H", "2M2", "2M2H", "2BH"
+!
+DEFINE TRANCHE DISPLAY_ORDER "1AH", "1M1", "1M1H", "1M2", "1M2H", "1BH", "2AH", "2M1", "2M1H", "2M2", "2M2H", "2BH"
+!
+ DEFINE VARNAMES #Coll_I1, #Coll_P1, #Coll_I2, #Coll_P2
+!
+   DEAL_CLOCK_INFO _
+       ISSUE_CDU_DATE             20140501 _
+       DEAL_FIRSTPAY_DATE         20140625 _
+       DEAL_PAYRULE_FREQ          M
+!
+  DEFINE CLASS "1AH", "SUBORD_1", "2AH", "SUBORD_2"
+!
+  DEFINE STANDARDIZE EXCESS_INTEREST     GROUP 1          #XSSpread1      = 0
+  DEFINE STANDARDIZE EXCESS_INTEREST     GROUP 2          #XSSpread2      = 0
+!
+  DEFINE DYNAMIC STICKY #NetRate  = MAX(0, COLL_I_MISC("COUPON")) / COLL_PREV_BAL * 1200
+  DEFINE DYNAMIC STICKY #NetRate1  = MAX(0, COLL_I_MISC("COUPON",1)) / COLL_PREV_BAL(1) * 1200
+  DEFINE DYNAMIC STICKY #NetRate2  = MAX(0, COLL_I_MISC("COUPON",2)) / COLL_PREV_BAL(2) * 1200
+!
+  DEFINE DYNAMIC STICKY #NetRate1Actual360 = #Netrate1 * 30 / DAYS_DIFF(CURDATE, MONTHS_ADD(CURDATE,-1))
+!
+  DEFINE DYNAMIC STICKY #NetRate2Actual360 = #Netrate2 * 30 / DAYS_DIFF(CURDATE, MONTHS_ADD(CURDATE,-1))
+!
+TOLERANCE WRITEDOWN_0LOSS 9999999999.00
+!
+!
+ 
+DEFINE STANDARDIZE UNKNOWN FULL_NAME "Group 1 Reversed Credit Event Percent" DESCRIPTION "Percentage of Credit Events that will be reversed" #G1_REV_CE_PCT = 0   
+DEFINE STANDARDIZE UNKNOWN FULL_NAME "Group 1 Reversed Credit Event Lag" DESCRIPTION "Number of months between Credit Event and reversal" #G1_REV_CE_LAG = 0   
+DEFINE STANDARDIZE UNKNOWN FULL_NAME "Group 2 Reversed Credit Event Percent" DESCRIPTION "Percentage of Credit Events that will be reversed" #G2_REV_CE_PCT = 0   
+DEFINE STANDARDIZE UNKNOWN FULL_NAME "Group 2 Reversed Credit Event Lag" DESCRIPTION "Number of months between Credit Event and reversal" #G2_REV_CE_LAG = 0   
+!!DEFINE STANDARDIZE UNKNOWN FULL_NAME "M-1 Margin (bps)" DESCRIPTION "LIBOR Margin for M-1 Notes in basis points" #M1_MARGIN = 300   
+!!DEFINE STANDARDIZE UNKNOWN FULL_NAME "M-2 Margin (bps)" DESCRIPTION "LIBOR Margin for M-2 Notes in basis points" #M2_MARGIN = 550   
+
+
+DEFINE COLLAT SUM GROUP 1 #G1_CE_AMT = LOAN("LIQUIDATE") - LOAN("ADDL_BALRED")
+DEFINE COLLAT SUM GROUP 1 #G1_UNSCHEDULED_PRIN = MAX(0,LOAN("PREP_AMT") + LOAN("ADDL_BALRED") - LOAN("PIKAMT"))
+DEFINE COLLAT SUM GROUP 1 #G1_CLASS_A_WU = MAX(0,LOAN("PIKAMT") - (LOAN("PREP_AMT") + LOAN("ADDL_BALRED")))
+DEFINE #G1_CUM_NET_CE_AMT = 0                                 
+DEFINE #G1_SUBPCT = 0   
+
+
+DEFINE COLLAT SUM GROUP 2 #G2_CE_AMT = LOAN("LIQUIDATE") - LOAN("ADDL_BALRED")
+DEFINE COLLAT SUM GROUP 2 #G2_UNSCHEDULED_PRIN = MAX(0,LOAN("PREP_AMT") + LOAN("ADDL_BALRED") - LOAN("PIKAMT"))
+DEFINE COLLAT SUM GROUP 2 #G2_CLASS_A_WU = MAX(0,LOAN("PIKAMT") - (LOAN("PREP_AMT") + LOAN("ADDL_BALRED")))
+DEFINE #G2_CUM_NET_CE_AMT = 0                                 
+DEFINE #G2_SUBPCT = 0 
+                       
+
+
+  DEFINE MACRO #Proxy_RSV_REINV = PROXY  LIBOR_1MO
+!
+!
+  DEFINE  INDEX _RSV_REINVESTMENT  {#Proxy_RSV_REINV}
+!
+  INITIAL INDEX    LIBOR_1MO        0.1505
+  INITIAL INDEX    _RSV_REINVESTMENT          4
+!
+DEFINE SETTINGS CASHFLOW_REINVESTMENT_ALLOWED NO
+!
+!
+Tranche "1AH" SEN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("1AH#1") LT 0.01);
+   Block 45487566781.00 at 0 GROUP 1  FREQ M _
+          DAYCOUNT 30360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+!
+Tranche "1M1" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("1M1#1") LT 0.01);
+   Block 555575000.00 at 1.1005 GROUP 1  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+     1 * LIBOR_1MO + 0.95
+     0     99999999
+!
+Tranche "1M1H" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("1M1H#1") LT 0.01);
+   Block 30604984.00 at 0 GROUP 1  FREQ M _
+          DAYCOUNT 30360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+!
+Tranche "1M2" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("1M2#1") LT 0.01);
+   Block 644467000.00 at 3.1005 GROUP 1  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+     1 * LIBOR_1MO + 2.60
+     0     99999999
+!
+Tranche "1M2H" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("1M2H#1") LT 0.01);
+   Block 35501782.00 at 0 GROUP 1  FREQ M _
+          DAYCOUNT 30360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+!
+Tranche "1BH" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("1BH#1") LT 0.01);
+   Block 140683197.00 at 0 GROUP 1  FREQ M _
+          DAYCOUNT 30360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+!
+Tranche "2AH" SEN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2AH#1") LT 0.01);
+   Block 13421329303.00 at 0 GROUP 2  FREQ M _
+          DAYCOUNT 30360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+!
+Tranche "2M1" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2M1#1") LT 0.01);
+   Block 174204000.00 at 1.2505 GROUP 2  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+     1 * LIBOR_1MO + 0.95
+     0     99999999
+!
+Tranche "2M1H" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2M1H#1") LT 0.01);
+   Block 28619632.00 at 0 GROUP 2  FREQ M _
+          DAYCOUNT 30360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+!
+Tranche "2M2" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2M2#1") LT 0.01);
+   Block 225820000.00 at 3.2505 GROUP 2  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+     1 * LIBOR_1MO + 2.60
+     0     99999999
+!
+Tranche "2M2H" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2M2H#1") LT 0.01);
+   Block 46942815.00 at 0 GROUP 2  FREQ M _
+          DAYCOUNT 30360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+!
+Tranche "2BH" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2BH#1") LT 0.01);
+   Block 90920939.00 at 0 GROUP 2  FREQ M _
+          DAYCOUNT 30360 BUSINESS_DAY NONE _
+          Delay 0  Dated 20140528  Next 20140625
+!
+PRICING _
+DEFINE PSEUDO_TRANCHE COLLAT _
+   Delay 24 Dated 20140501 Next 20140625 Settle 20140528
+DEFINE PSEUDO_TRANCHE COLLAT GROUP 1 _
+   Delay 24 Dated 20140501 Next 20140625 Settle 20140528
+DEFINE PSEUDO_TRANCHE COLLAT GROUP 2 _
+   Delay 24 Dated 20140501 Next 20140625 Settle 20140528
+!
+  CREDIT_SUPPORT_BASIS GROUP_DEAL =  1 2
+!
+  CLASS "1AH"       NO_BUILD_TRANCHE _
+                    = "1AH"
+  CLASS "1M1"       NO_BUILD_TRANCHE _
+                    = "1M1"
+  CLASS "1M1H"      NO_BUILD_TRANCHE _
+                    = "1M1H"
+  CLASS "1M2"       NO_BUILD_TRANCHE _
+                    = "1M2"
+  CLASS "1M2H"      NO_BUILD_TRANCHE _
+                    = "1M2H"
+  CLASS "1BH"       NO_BUILD_TRANCHE _
+                    = "1BH"
+  CLASS "2AH"       NO_BUILD_TRANCHE _
+                    = "2AH"
+  CLASS "2M1"       NO_BUILD_TRANCHE _
+                    = "2M1"
+  CLASS "2M1H"      NO_BUILD_TRANCHE _
+                    = "2M1H"
+  CLASS "2M2"       NO_BUILD_TRANCHE _
+                    = "2M2"
+  CLASS "2M2H"      NO_BUILD_TRANCHE _
+                    = "2M2H"
+  CLASS "2BH"       NO_BUILD_TRANCHE _
+                    = "2BH"
+  CLASS "1MEZZ1"    WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "1M1" "1M1H" 
+  CLASS "1MEZZ2"    WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "1M2" "1M2H" 
+  CLASS "SUBORD_1"  WRITEDOWN_BAL SUBORD ALLOCATION _
+                    = "1MEZZ1" "1MEZZ2" "1BH" 
+  CLASS "2MEZZ1"    WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "2M1" "2M1H" 
+  CLASS "2MEZZ2"    WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "2M2" "2M2H" 
+  CLASS "SUBORD_2"  WRITEDOWN_BAL SUBORD ALLOCATION _
+                    = "2MEZZ1" "2MEZZ2" "2BH" 
+!
+!
+  CLASS "GRP1" _
+                 DISTRIB_CLASS RULES _
+                   = "1AH" "SUBORD_1" 
+  CLASS "GRP2" _
+                 DISTRIB_CLASS RULES _
+                   = "2AH" "SUBORD_2" 
+!
+  CLASS "ROOT"  ROOT_LIST = "GRP1" "GRP2"
+!
+  GROUP 0       ROOT      = 1 2
+!
+
+!
+  DEFINE PSEUDO_TRANCHE CLASS "SUBORD_1"     Delay 0  Dated 20140528  Next 20140625 DAYCOUNT 30360 BUSINESS_DAY NONE
+!
+  DEFINE PSEUDO_TRANCHE CLASS "1MEZZ1"       Delay 0  Dated 20140528  Next 20140625 DAYCOUNT 30360 BUSINESS_DAY NONE
+!
+  DEFINE PSEUDO_TRANCHE CLASS "1MEZZ2"       Delay 0  Dated 20140528  Next 20140625 DAYCOUNT 30360 BUSINESS_DAY NONE
+!
+  DEFINE PSEUDO_TRANCHE CLASS "SUBORD_2"     Delay 0  Dated 20140528  Next 20140625 DAYCOUNT 30360 BUSINESS_DAY NONE
+!
+  DEFINE PSEUDO_TRANCHE CLASS "2MEZZ1"       Delay 0  Dated 20140528  Next 20140625 DAYCOUNT 30360 BUSINESS_DAY NONE
+!
+  DEFINE PSEUDO_TRANCHE CLASS "2MEZZ2"       Delay 0  Dated 20140528  Next 20140625 DAYCOUNT 30360 BUSINESS_DAY NONE
+!
+!
+  CROSSOVER When 0
+!
+TRIGGER "Trig-G1_CETest1" _
+        FULL_NAME       "G1_CETest" _
+        GROUP          1 _
+        ORIG_TESTVAL    0.000 _
+        TESTVAL         ( 100 * #G1_SubPct ); _
+        ORIG_TARGETVAL  0.000 _
+        TARGETVAL       ( 3 ); _
+        TRIGVAL         HIPASS
+!
+TRIGGER "Trig-G2_CETest2" _
+        FULL_NAME       "G2_CETest" _
+        GROUP          2 _
+        ORIG_TESTVAL    0.000 _
+        TESTVAL         ( 100 * #G2_SubPct ); _
+        ORIG_TARGETVAL  0.000 _
+        TARGETVAL       ( 4.65 ); _
+        TRIGVAL         HIPASS
+!
+  OPTIONAL REDEMPTION:    "Cleanup" _
+                          DESCRIPTION "This call may be exercised on any distribution date on which the aggregate principal balance of the collateral is less than 10% of the aggregate principal balance of the collateral as of the cut-off date." _
+                          COLL_FRAC 10% _
+                          PRICE_P ( COLL_BAL );
+!
+  OPTIONAL REDEMPTION:    "Legal_Final" _
+                          DESCRIPTION "This call will be exercised on any distribution date on which the current date is greater than 20240501." _
+                          MANDATORY _
+                          DATE 20240501 _
+                          PRICE_P ( COLL_BAL );
+!
+!
+ INTEREST_SHORTFALL GROUP 1   FULL_PREPAY    Compensate Pro_rata _
+                              PARTIAL_PREPAY Compensate Pro_rata _
+                              LOSS           NO_Compensate SUBORDINATED ACCUM
+!
+ INTEREST_SHORTFALL GROUP 2   FULL_PREPAY    Compensate Pro_rata _
+                              PARTIAL_PREPAY Compensate Pro_rata _
+                              LOSS           NO_Compensate SUBORDINATED ACCUM
+!
+ DEFINE MACRO BLOCK #A1AH_Prn =
+{
+------------------------------------
+        from :  CLASS ( "1AH" )
+         pay :  SEQUENTIAL ( "1AH#1" )
+------------------------------------
+}
+!
+ DEFINE MACRO BLOCK #SUBORD_1_Int =
+{
+------------------------------------
+        from :  CLASS ( "SUBORD_1" )
+         pay :  CLASS INTEREST SEQUENTIAL  ( "1MEZZ1", "1MEZZ2", "1BH" )
+------------------------------------
+------------------------------------
+        from :  CLASS ( "1MEZZ1" )
+         pay :  CLASS INTEREST PRO_RATA  ( "1M1"; "1M1H" )
+------------------------------------
+------------------------------------
+        from :  CLASS ( "1MEZZ2" )
+         pay :  CLASS INTEREST PRO_RATA  ( "1M2"; "1M2H" )
+------------------------------------
+}
+!
+ DEFINE MACRO BLOCK #SUBORD_1_InS =
+{
+------------------------------------
+        from :  CLASS ( "SUBORD_1" )
+         pay :  CLASS INTSHORT SEQUENTIAL  ( "1MEZZ1", "1MEZZ2", "1BH" )
+------------------------------------
+------------------------------------
+        from :  CLASS ( "1MEZZ1" )
+         pay :  CLASS INTSHORT PRO_RATA  ( "1M1"; "1M1H" )
+------------------------------------
+------------------------------------
+        from :  CLASS ( "1MEZZ2" )
+         pay :  CLASS INTSHORT PRO_RATA  ( "1M2"; "1M2H" )
+------------------------------------
+}
+!
+ DEFINE MACRO BLOCK #SUBORD_1_Prn =
+{
+------------------------------------
+        from :  CLASS ( "SUBORD_1" )
+         pay :  CLASS BALANCE SEQUENTIAL ( "1MEZZ1", "1MEZZ2", "1BH" )
+------------------------------------
+!
+        from :  CLASS ( "1MEZZ1" )
+         pay :  CLASS BALANCE PRO_RATA ( "1M1" ; "1M1H" )
+------------------------------------
+!
+        from :  CLASS ( "1MEZZ2" )
+         pay :  CLASS BALANCE PRO_RATA ( "1M2" ; "1M2H" )
+------------------------------------
+!
+------------------------------------
+        from :  CLASS ( "1M1" )
+         pay :  SEQUENTIAL ( "1M1#1" )
+------------------------------------
+        from :  CLASS ( "1M1H" )
+         pay :  SEQUENTIAL ( "1M1H#1" )
+------------------------------------
+        from :  CLASS ( "1M2" )
+         pay :  SEQUENTIAL ( "1M2#1" )
+------------------------------------
+        from :  CLASS ( "1M2H" )
+         pay :  SEQUENTIAL ( "1M2H#1" )
+------------------------------------
+        from :  CLASS ( "1BH" )
+         pay :  SEQUENTIAL ( "1BH#1" )
+------------------------------------
+}
+!
+ DEFINE MACRO BLOCK #A2AH_Prn =
+{
+------------------------------------
+        from :  CLASS ( "2AH" )
+         pay :  SEQUENTIAL ( "2AH#1" )
+------------------------------------
+}
+!
+ DEFINE MACRO BLOCK #SUBORD_2_Int =
+{
+------------------------------------
+        from :  CLASS ( "SUBORD_2" )
+         pay :  CLASS INTEREST SEQUENTIAL  ( "2MEZZ1", "2MEZZ2", "2BH" )
+------------------------------------
+------------------------------------
+        from :  CLASS ( "2MEZZ1" )
+         pay :  CLASS INTEREST PRO_RATA  ( "2M1"; "2M1H" )
+------------------------------------
+------------------------------------
+        from :  CLASS ( "2MEZZ2" )
+         pay :  CLASS INTEREST PRO_RATA  ( "2M2"; "2M2H" )
+------------------------------------
+}
+!
+ DEFINE MACRO BLOCK #SUBORD_2_InS =
+{
+------------------------------------
+        from :  CLASS ( "SUBORD_2" )
+         pay :  CLASS INTSHORT SEQUENTIAL  ( "2MEZZ1", "2MEZZ2", "2BH" )
+------------------------------------
+------------------------------------
+        from :  CLASS ( "2MEZZ1" )
+         pay :  CLASS INTSHORT PRO_RATA  ( "2M1"; "2M1H" )
+------------------------------------
+------------------------------------
+        from :  CLASS ( "2MEZZ2" )
+         pay :  CLASS INTSHORT PRO_RATA  ( "2M2"; "2M2H" )
+------------------------------------
+}
+!
+ DEFINE MACRO BLOCK #SUBORD_2_Prn =
+{
+------------------------------------
+        from :  CLASS ( "SUBORD_2" )
+         pay :  CLASS BALANCE SEQUENTIAL ( "2MEZZ1", "2MEZZ2", "2BH" )
+------------------------------------
+!
+        from :  CLASS ( "2MEZZ1" )
+         pay :  CLASS BALANCE PRO_RATA ( "2M1" ; "2M1H" )
+------------------------------------
+!
+        from :  CLASS ( "2MEZZ2" )
+         pay :  CLASS BALANCE PRO_RATA ( "2M2" ; "2M2H" )
+------------------------------------
+!
+------------------------------------
+        from :  CLASS ( "2M1" )
+         pay :  SEQUENTIAL ( "2M1#1" )
+------------------------------------
+        from :  CLASS ( "2M1H" )
+         pay :  SEQUENTIAL ( "2M1H#1" )
+------------------------------------
+        from :  CLASS ( "2M2" )
+         pay :  SEQUENTIAL ( "2M2#1" )
+------------------------------------
+        from :  CLASS ( "2M2H" )
+         pay :  SEQUENTIAL ( "2M2H#1" )
+------------------------------------
+        from :  CLASS ( "2BH" )
+         pay :  SEQUENTIAL ( "2BH#1" )
+------------------------------------
+}
+!
+!
+!
+ CMO Block Payment Rules
+------------------------------------
+   calculate :  #Coll_I1              = COLL_I(1) + CF_REINV_INCOME * COLL_CF(1)/COLL_CF
+   calculate :  #Coll_P1              = COLL_P(1)
+   calculate :  #Coll_I2              = COLL_I(2) + CF_REINV_INCOME * COLL_CF(2)/COLL_CF
+   calculate :  #Coll_P2              = COLL_P(2)
+------------------------------------
+------------------------------------
+   calculate :  #Coll_I_Mod1          = 0.00 + CF_REINV_INCOME * COLL_CF(1)/COLL_CF
+   calculate :  #XSSpread_Mod1        = 0.00
+------------------------------------
+   calculate :  #Coll_I_Mod2          = 0.00 + CF_REINV_INCOME * COLL_CF(2)/COLL_CF
+   calculate :  #XSSpread_Mod2        = 0.00
+------------------------------------
+   calculate :  #XSSpread1           = #Coll_I1 - CAPPED_OPTIMAL_INTPMT("1AH#1","1M1#1","1M1H#1","1M2#1","1M2H#1","1BH#1") - INTSHORT_ACCUM("1AH#1","1M1#1","1M1H#1","1M2#1","1M2H#1","1BH#1") + #XSSpread_Mod1
+   calculate :  #XSRate1             = 1200 * #XSSpread1 / COLL_PREV_BAL(1)
+------------------------------------
+   calculate :  #XSSpread2           = #Coll_I2 - CAPPED_OPTIMAL_INTPMT("2AH#1","2M1#1","2M1H#1","2M2#1","2M2H#1","2BH#1") - INTSHORT_ACCUM("2AH#1","2M1#1","2M1H#1","2M2#1","2M2H#1","2BH#1") + #XSSpread_Mod2
+   calculate :  #XSRate2             = 1200 * #XSSpread2 / COLL_PREV_BAL(2)
+------------------------------------
+!
+  calculate :  "1AH" _
+ NO_CHECK  SCHEDULED GROUP 1   AMOUNT         LIMIT #Sched1AH       = SHARE("1AH") * COLL_P_SCHED(1); _
+ NO_CHECK  PREPAY    GROUP 1   AMOUNT         LIMIT #Prepay1AH      = SHARE("1AH") * COLL_P_PREPAY(1); _
+ NO_CHECK  LIQUIDATE  GROUP 1  AMOUNT  LIMIT #Recover1AH     = SHARE("1AH") * DELINQ_LIQUIDATE(1)
+!
+  calculate :  "SUBORD_1" _
+ NO_CHECK  SCHEDULED GROUP 1   AMOUNT         LIMIT #SchedSUBORD_1  = SHARE("SUBORD_1") * COLL_P_SCHED(1); _
+ NO_CHECK  PREPAY    GROUP 1   AMOUNT         LIMIT #PrepaySUBORD_1 = SHARE("SUBORD_1") * COLL_P_PREPAY(1); _
+ NO_CHECK  LIQUIDATE  GROUP 1  AMOUNT  LIMIT #RecoverSUBORD_1 = SHARE("SUBORD_1") * DELINQ_LIQUIDATE(1)
+!
+  calculate :  "2AH" _
+ NO_CHECK  SCHEDULED GROUP 2   AMOUNT         LIMIT #Sched2AH       = SHARE("2AH") * COLL_P_SCHED(2); _
+ NO_CHECK  PREPAY    GROUP 2   AMOUNT         LIMIT #Prepay2AH      = SHARE("2AH") * COLL_P_PREPAY(2); _
+ NO_CHECK  LIQUIDATE  GROUP 2  AMOUNT  LIMIT #Recover2AH     = SHARE("2AH") * DELINQ_LIQUIDATE(2)
+!
+  calculate :  "SUBORD_2" _
+ NO_CHECK  SCHEDULED GROUP 2   AMOUNT         LIMIT #SchedSUBORD_2  = SHARE("SUBORD_2") * COLL_P_SCHED(2); _
+ NO_CHECK  PREPAY    GROUP 2   AMOUNT         LIMIT #PrepaySUBORD_2 = SHARE("SUBORD_2") * COLL_P_PREPAY(2); _
+ NO_CHECK  LIQUIDATE  GROUP 2  AMOUNT  LIMIT #RecoverSUBORD_2 = SHARE("SUBORD_2") * DELINQ_LIQUIDATE(2)
+!
+------------------------------------
+!
+------------------------------------  Pay to External From Cash Account
+        from :  CLASS ( "GRP1" )
+         pay :  NOWHERE (NOLIMIT)
+------------------------------------
+!
+------------------------------------  Custom Payrule: CAS14C2_G1_CALCS  
+!!Credit Event Calculations                         
+   calculate :  #G1_REV_CE_AMT = MAX(0, MIN(#G1_REV_CE_PCT, 100) * LAGVAR(#G1_CE_AMT, #G1_REV_CE_LAG) / 100)
+   calculate :  #G1_NET_CE_AMT =  MAX(0, #G1_CE_AMT - #G1_REV_CE_AMT)
+   calculate :  #G1_NET_REV_CE_AMT =  MIN(#G1_CUM_NET_CE_AMT, MAX(0, #G1_REV_CE_AMT - #G1_CE_AMT)) 
+   calculate :  #G1_PREV_CUM_NET_CE_AMT = #G1_CUM_NET_CE_AMT 
+   calculate :  #G1_CUM_NET_CE_AMT =  #G1_CUM_NET_CE_AMT + #G1_NET_CE_AMT - #G1_NET_REV_CE_AMT  
+   calculate :  #G1_PREV_CUM_NET_CE_PCT = #G1_PREV_CUM_NET_CE_AMT /#OrigCollBal1 
+   calculate :  #G1_CUM_NET_CE_PCT =  #G1_CUM_NET_CE_AMT /#OrigCollBal1   
+
+!!Senior/Sub percentages  
+   calculate :  #G1_SeniorPct = BBAL("1AH") / COLL_PREV_BAL(1)  
+   calculate :  #G1_SubPct = 1 - #G1_SeniorPct 
+
+ !!Applicable severity                                             
+   calculate : 	#G1_10_PCT_TIER = MAX(0, MIN(1%, MAX(#G1_PREV_CUM_NET_CE_PCT, #G1_CUM_NET_CE_PCT)) - _
+								MAX(0%, MIN(#G1_PREV_CUM_NET_CE_PCT, #G1_CUM_NET_CE_PCT)))
+   calculate : 	#G1_20_PCT_TIER = MAX(0, MIN(2%, MAX(#G1_PREV_CUM_NET_CE_PCT, #G1_CUM_NET_CE_PCT)) - _
+								MAX(1%, MIN(#G1_PREV_CUM_NET_CE_PCT, #G1_CUM_NET_CE_PCT)))
+   calculate : 	#G1_40_PCT_TIER = MAX(0, MAX(#G1_PREV_CUM_NET_CE_PCT, #G1_CUM_NET_CE_PCT) - _
+								MAX(2%, MIN(#G1_PREV_CUM_NET_CE_PCT, #G1_CUM_NET_CE_PCT)))                                                                                           
+   calculate : 	#G1_APPLIC_SEVERITY = (#G1_10_PCT_TIER * 10% + #G1_20_PCT_TIER * 20% + #G1_40_PCT_TIER * 40%) / _
+									(#G1_10_PCT_TIER + #G1_20_PCT_TIER + #G1_40_PCT_TIER)
+   calculate :  #G1_WRITEDOWN = MIN(BBAL("SUBORD_1"),#G1_NET_CE_AMT * #G1_APPLIC_SEVERITY)   
+   calculate :  #G1_WRITEUP = #G1_NET_REV_CE_AMT * #G1_APPLIC_SEVERITY
+
+ !!Principal allocation   
+   calculate :  #G1_CALC_RECOVERY_PRIN = #G1_CE_AMT - #G1_WRITEDOWN + #G1_WRITEUP
+   calculate :  #G1_SeniorPrin = IF NOT TRIGGER("Trig-G1_CETest1") THEN _
+									#G1_SeniorPct * COLL_P_SCHED(1) + _
+									#G1_SeniorPct * #G1_UNSCHEDULED_PRIN + _
+									100% * #G1_CALC_RECOVERY_PRIN ELSE _
+									#G1_SeniorPct * COLL_P_SCHED(1) + _
+									100% * #G1_UNSCHEDULED_PRIN + _
+									100% * #G1_CALC_RECOVERY_PRIN 
+   calculate :  #G1_SeniorPrin = MIN (#G1_SeniorPrin, BBAL("1AH")) 
+   calculate :  #G1_SubPrin = IF CURMONTH eq 120 THEN MAX(0, BBAL("SUBORD_1") - #G1_WRITEDOWN) ELSE _
+							COLL_P_SCHED(1) + #G1_UNSCHEDULED_PRIN + #G1_CALC_RECOVERY_PRIN - #G1_SeniorPrin
+
+------------------------------------
+!
+------------------------------------  Custom Payrule: CAS14G2_G1_INT  
+
+------------------------------------  Pay Interest to CAS Bonds
+        from :  NOWHERE (NOLIMIT) 
+         pay :  CLASS INTEREST  SEQUENTIAL  ( "1M1" )
+------------------------------------
+        from :  NOWHERE (NOLIMIT) 
+         pay :  CLASS INTEREST  SEQUENTIAL  ( "1M2" )
+------------------------------------                          
+------------------------------------
+!
+------------------------------------  Pay Balance to 1AH  From External
+        from :  NOWHERE (NOLIMIT)
+  subject to :  CEILING ( (#G1_SeniorPrin) )
+         pay :  CLASS BALANCE   SEQUENTIAL  ( "1AH" )
+------------------------------------
+  {#A1AH_Prn}
+------------------------------------
+!
+------------------------------------  Pay Balance to SUBORD_1  From External
+        from :  NOWHERE (NOLIMIT)
+  subject to :  CEILING ( (#G1_SubPrin) )
+         pay :  CLASS BALANCE   SEQUENTIAL  ( "SUBORD_1" )
+------------------------------------
+  {#SUBORD_1_Prn}
+------------------------------------
+!
+------------------------------------  Custom Payrule: CAS14C2_G1_WD  
+------------------------------------  Writedown Bonds 
+        from :  SUBACCOUNT ( #G1_Writedown )
+         pay :  WRITEDOWN SEQUENTIAL ( "1BH#1" )          
+------------------------------------
+        from :  SUBACCOUNT ( #G1_Writedown )
+         pay :  WRITEDOWN PRO_RATA ( "1M2#1";"1M2H#1" )       
+------------------------------------
+        from :  SUBACCOUNT ( #G1_Writedown )
+         pay :  WRITEDOWN PRO_RATA ( "1M1#1";"1M1H#1" )   
+------------------------------------
+        from :  SUBACCOUNT ( #G1_Writedown )
+         pay :  WRITEDOWN SEQUENTIAL ( "1AH#1" )
+------------------------------------                
+        from :  SUBACCOUNT ( #G1_WriteUp )               
+  subject to :  CEILING (( WDBAL_ACCUM("1AH#1") ))
+         pay :  WRITEUP SEQUENTIAL ( "1AH#1" )
+------------------------------------
+        from :  SUBACCOUNT ( #G1_WriteUp )    
+  subject to :  CEILING (( WDBAL_ACCUM("1M1#1")+WDBAL_ACCUM("1M1H#1") ))
+         pay :  WRITEUP PRO_RATA ( "1M1#1";"1M1H#1" )   
+------------------------------------
+        from :  SUBACCOUNT ( #G1_WriteUp )     
+  subject to :  CEILING ((  WDBAL_ACCUM("1M2#1")+WDBAL_ACCUM("1M2H#1") ))
+         pay :  WRITEUP PRO_RATA ( "1M2#1";"1M2H#1" )    
+------------------------------------
+        from :  SUBACCOUNT ( #G1_WriteUp )
+  subject to :  CEILING (( WDBAL_ACCUM("1BH#1") ))
+         pay :  WRITEUP SEQUENTIAL ( "1BH#1" )       
+------------------------------------            
+------------------------------------
+!
+------------------------------------  Pay to External From Cash Account
+        from :  CLASS ( "GRP2" )
+         pay :  NOWHERE (NOLIMIT)
+------------------------------------
+!
+------------------------------------  Custom Payrule: CAS14C2_G2_CALCS  
+!!Credit Event Calculations                         
+   calculate :  #G2_REV_CE_AMT = MAX(0, MIN(#G2_REV_CE_PCT, 100) * LAGVAR(#G2_CE_AMT, #G2_REV_CE_LAG) / 100)
+   calculate :  #G2_NET_CE_AMT =  MAX(0, #G2_CE_AMT - #G2_REV_CE_AMT)
+   calculate :  #G2_NET_REV_CE_AMT =  MIN(#G2_CUM_NET_CE_AMT, MAX(0, #G2_REV_CE_AMT - #G2_CE_AMT)) 
+   calculate :  #G2_PREV_CUM_NET_CE_AMT = #G2_CUM_NET_CE_AMT 
+   calculate :  #G2_CUM_NET_CE_AMT =  #G2_CUM_NET_CE_AMT + #G2_NET_CE_AMT - #G2_NET_REV_CE_AMT  
+   calculate :  #G2_PREV_CUM_NET_CE_PCT = #G2_PREV_CUM_NET_CE_AMT /#OrigCollBal2 
+   calculate :  #G2_CUM_NET_CE_PCT =  #G2_CUM_NET_CE_AMT /#OrigCollBal2   
+
+!!Senior/Sub percentages  
+   calculate :  #G2_SeniorPct = BBAL("2AH") / COLL_PREV_BAL(2)  
+   calculate :  #G2_SubPct = 1 - #G2_SeniorPct 
+
+ !!Applicable severity                                             
+   calculate : 	#G2_10_PCT_TIER = MAX(0, MIN(1%, MAX(#G2_PREV_CUM_NET_CE_PCT, #G2_CUM_NET_CE_PCT)) - _
+								MAX(0%, MIN(#G2_PREV_CUM_NET_CE_PCT, #G2_CUM_NET_CE_PCT)))
+   calculate : 	#G2_20_PCT_TIER = MAX(0, MIN(3%, MAX(#G2_PREV_CUM_NET_CE_PCT, #G2_CUM_NET_CE_PCT)) - _
+								MAX(1%, MIN(#G2_PREV_CUM_NET_CE_PCT, #G2_CUM_NET_CE_PCT)))
+   calculate : 	#G2_25_PCT_TIER = MAX(0, MAX(#G2_PREV_CUM_NET_CE_PCT, #G2_CUM_NET_CE_PCT) - _
+								MAX(3%, MIN(#G2_PREV_CUM_NET_CE_PCT, #G2_CUM_NET_CE_PCT)))                                                                                           
+   calculate : 	#G2_APPLIC_SEVERITY = (#G2_10_PCT_TIER * 10% + #G2_20_PCT_TIER * 20% + #G2_25_PCT_TIER * 25%) / _
+									(#G2_10_PCT_TIER + #G2_20_PCT_TIER + #G2_25_PCT_TIER)
+   calculate :  #G2_WRITEDOWN = MIN(BBAL("SUBORD_2"),#G2_NET_CE_AMT * #G2_APPLIC_SEVERITY)   
+   calculate :  #G2_WRITEUP = #G2_NET_REV_CE_AMT * #G2_APPLIC_SEVERITY
+
+ !!Principal allocation   
+   calculate :  #G2_CALC_RECOVERY_PRIN = #G2_CE_AMT - #G2_WRITEDOWN + #G2_WRITEUP
+   calculate :  #G2_SeniorPrin = IF NOT TRIGGER("Trig-G2_CETest2") THEN _
+									#G2_SeniorPct * COLL_P_SCHED(2) + _
+									#G2_SeniorPct * #G2_UNSCHEDULED_PRIN + _
+									100% * #G2_CALC_RECOVERY_PRIN ELSE _
+									#G2_SeniorPct * COLL_P_SCHED(2) + _
+									100% * #G2_UNSCHEDULED_PRIN + _
+									100% * #G2_CALC_RECOVERY_PRIN 
+   calculate :  #G2_SeniorPrin = MIN (#G2_SeniorPrin, BBAL("2AH")) 
+   calculate :  #G2_SubPrin = IF CURMONTH eq 120 THEN MAX(0, BBAL("SUBORD_2") - #G2_WRITEDOWN) ELSE _
+							COLL_P_SCHED(2) + #G2_UNSCHEDULED_PRIN + #G2_CALC_RECOVERY_PRIN - #G2_SeniorPrin
+
+
+------------------------------------
+!
+------------------------------------  Custom Payrule: CAS14G2_G2_INT  
+
+------------------------------------  Pay Interest to CAS Bonds
+        from :  NOWHERE (NOLIMIT) 
+         pay :  CLASS INTEREST  SEQUENTIAL  ( "2M1" )
+------------------------------------
+        from :  NOWHERE (NOLIMIT) 
+         pay :  CLASS INTEREST  SEQUENTIAL  ( "2M2" )
+------------------------------------                          
+------------------------------------
+!
+------------------------------------  Pay Balance to 2AH  From External
+        from :  NOWHERE (NOLIMIT)
+  subject to :  CEILING ( (#G2_SeniorPrin) )
+         pay :  CLASS BALANCE   SEQUENTIAL  ( "2AH" )
+------------------------------------
+  {#A2AH_Prn}
+------------------------------------
+!
+------------------------------------  Pay Balance to SUBORD_2  From External
+        from :  NOWHERE (NOLIMIT)
+  subject to :  CEILING ( (#G2_SubPrin) )
+         pay :  CLASS BALANCE   SEQUENTIAL  ( "SUBORD_2" )
+------------------------------------
+  {#SUBORD_2_Prn}
+------------------------------------
+!
+------------------------------------  Custom Payrule: CAS14C2_G2_WD  
+------------------------------------  Writedown Bonds 
+        from :  SUBACCOUNT ( #G2_Writedown )
+         pay :  WRITEDOWN SEQUENTIAL ( "2BH#1" )          
+------------------------------------
+        from :  SUBACCOUNT ( #G2_Writedown )
+         pay :  WRITEDOWN PRO_RATA ( "2M2#1";"2M2H#1" )       
+------------------------------------
+        from :  SUBACCOUNT ( #G2_Writedown )
+         pay :  WRITEDOWN PRO_RATA ( "2M1#1";"2M1H#1" )   
+------------------------------------
+        from :  SUBACCOUNT ( #G2_Writedown )
+         pay :  WRITEDOWN SEQUENTIAL ( "2AH#1" )
+------------------------------------                
+        from :  SUBACCOUNT ( #G2_WriteUp )               
+  subject to :  CEILING (( WDBAL_ACCUM("2AH#1") ))
+         pay :  WRITEUP SEQUENTIAL ( "2AH#1" )
+------------------------------------
+        from :  SUBACCOUNT ( #G2_WriteUp )    
+  subject to :  CEILING (( WDBAL_ACCUM("2M1#1")+WDBAL_ACCUM("2M1H#1") ))
+         pay :  WRITEUP PRO_RATA ( "2M1#1";"2M1H#1" )   
+------------------------------------
+        from :  SUBACCOUNT ( #G2_WriteUp )     
+  subject to :  CEILING ((  WDBAL_ACCUM("2M2#1")+WDBAL_ACCUM("2M2H#1") ))
+         pay :  WRITEUP PRO_RATA ( "2M2#1";"2M2H#1" )    
+------------------------------------
+        from :  SUBACCOUNT ( #G2_WriteUp )
+  subject to :  CEILING (( WDBAL_ACCUM("2BH#1") ))
+         pay :  WRITEUP SEQUENTIAL ( "2BH#1" )       
+------------------------------------
+
+
+
+
+------------------------------------
+!
+ Collateral
+!
+!       Factor      --Delay--
+! Type   Date       P/Y    BV   Use BV for 0
+  WL  20140501    9999 9999   FALSE
+!
+! Pool#  Type     Gross     Current     Original   --Fee--  Maturity Orig
+!                 Coupon    Factor      Balance    P/Y  BV  P/Y   BV Term
+!! BEGINNING OF COLLATERAL
+M        1              WL    00    WAC              2.750 (     14237597.26 /     14237597.26 );     14237597.26                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        2              WL    00    WAC              2.899 (     68071692.96 /     68071692.96 );     68071692.96                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        3              WL    00    WAC              3.005 (    206327833.21 /    206327833.21 );    206327833.21                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        4              WL    00    WAC              3.129 (   1233078552.55 /   1233078552.55 );   1233078552.55                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        5              WL    00    WAC              3.253 (   4744910454.50 /   4744910454.50 );   4744910454.50                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        6              WL    00    WAC              3.385 (   8131195431.31 /   8131195431.31 );   8131195431.31                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        7              WL    00    WAC              3.502 (  10697950158.08 /  10697950158.08 );  10697950158.08                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        8              WL    00    WAC              3.626 (   8148883274.37 /   8148883274.37 );   8148883274.37                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        9              WL    00    WAC              3.750 (   5480609652.21 /   5480609652.21 );   5480609652.21                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        10             WL    00    WAC              3.890 (   3864519003.01 /   3864519003.01 );   3864519003.01                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        11             WL    00    WAC              4.001 (   1287135221.04 /   1287135221.04 );   1287135221.04                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        12             WL    00    WAC              4.126 (   1161984958.54 /   1161984958.54 );   1161984958.54                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        13             WL    00    WAC              4.250 (    943625936.91 /    943625936.91 );    943625936.91                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        14             WL    00    WAC              4.377 (    420506429.65 /    420506429.65 );    420506429.65                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        15             WL    00    WAC              4.500 (    265121753.13 /    265121753.13 );    265121753.13                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        16             WL    00    WAC              4.626 (    122325951.19 /    122325951.19 );    122325951.19                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        17             WL    00    WAC              4.753 (     48945617.08 /     48945617.08 );     48945617.08                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        18             WL    00    WAC              4.879 (     36136111.03 /     36136111.03 );     36136111.03                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        19             WL    00    WAC              5.002 (      9511356.29 /      9511356.29 );      9511356.29                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        20             WL    00    WAC              5.130 (      2869457.95 /      2869457.95 );      2869457.95                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        21             WL    00    WAC              5.250 (      2595247.61 /      2595247.61 );      2595247.61                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        22             WL    00    WAC              5.375 (      1539801.67 /      1539801.67 );      1539801.67                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        23             WL    00    WAC              5.500 (       726706.46 /       726706.46 );       726706.46                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        24             WL    00    WAC              5.625 (       899911.54 /       899911.54 );       899911.54                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 1      
+M        25             WL    00    WAC              5.750 (       211756.64 /       211756.64 );       211756.64                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        26             WL    00    WAC              5.875 (       252477.46 /       252477.46 );       252477.46                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        27             WL    00    WAC              6.000 (       226400.41 /       226400.41 );       226400.41                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 1      
+M        29             WL    00    WAC              2.750 (      4128825.87 /      4128825.87 );      4128825.87                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        30             WL    00    WAC              2.894 (     14854989.28 /     14854989.28 );     14854989.28                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        31             WL    00    WAC              3.004 (     77402401.17 /     77402401.17 );     77402401.17                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 2      
+M        32             WL    00    WAC              3.129 (    382965364.92 /    382965364.92 );    382965364.92                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 2      
+M        33             WL    00    WAC              3.253 (   1259492487.17 /   1259492487.17 );   1259492487.17                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 2      
+M        34             WL    00    WAC              3.384 (   2315929099.93 /   2315929099.93 );   2315929099.93                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 2      
+M        35             WL    00    WAC              3.501 (   3244916786.61 /   3244916786.61 );   3244916786.61                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        36             WL    00    WAC              3.626 (   2611676014.87 /   2611676014.87 );   2611676014.87                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        37             WL    00    WAC              3.750 (   1857865749.29 /   1857865749.29 );   1857865749.29                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        38             WL    00    WAC              3.887 (   1260801654.05 /   1260801654.05 );   1260801654.05                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        39             WL    00    WAC              4.000 (    362471496.34 /    362471496.34 );    362471496.34                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        40             WL    00    WAC              4.125 (    299528930.25 /    299528930.25 );    299528930.25                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        41             WL    00    WAC              4.250 (    183198394.73 /    183198394.73 );    183198394.73                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        42             WL    00    WAC              4.376 (     68653841.60 /     68653841.60 );     68653841.60                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        43             WL    00    WAC              4.500 (     26668358.09 /     26668358.09 );     26668358.09                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        44             WL    00    WAC              4.628 (     10451795.47 /     10451795.47 );     10451795.47                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 2      
+M        45             WL    00    WAC              4.750 (      3379417.92 /      3379417.92 );      3379417.92                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        46             WL    00    WAC              4.875 (      2637106.72 /      2637106.72 );      2637106.72                              0.           0.              347:13    347:13       360 NO_CHECK GROUP 2      
+M        47             WL    00    WAC              5.000 (       621415.23 /       621415.23 );       621415.23                              0.           0.              348:12    348:12       360 NO_CHECK GROUP 2      
+M        48             WL    00    WAC              5.250 (       192559.79 /       192559.79 );       192559.79                              0.           0.              346:14    346:14       360 NO_CHECK GROUP 2      
