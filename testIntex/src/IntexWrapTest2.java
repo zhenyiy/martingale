@@ -1,28 +1,3 @@
-import com.intex.IntexWrap;
-import com.intex.IntexWrapException;
-import com.intex.IntexWrapParseException;
-import com.intex.KeyVal;
-
-public class IntexWrapTest2 {
-	static {
-		System.setProperty("LD_LIBRARY_PATH", "/vn_le/en2_data_d/intex/test_intex/testIntex2/src");
-		System.setProperty("java.library.path", "/vn_le/en2_data_d/intex/test_intex/testIntex2");
-		System.loadLibrary("IntexWrapJNI"); // Notice lack of lib
-		System.loadLibrary("vcmowrap"); // Notice lack of lib prefix
-	}
-
-	private static String CDI_PATH() {
-		if (System.getProperty("file.separator").equals("/"))
-			return "/vn_le/en2_data_d/intex/test_intex/testintex2/src|/vn_cont/intexprod/data/cdi";
-			return "s:\\cmo_cdi";
-	}
-
-	private static String CDU_PATH() {
-		if (System.getProperty("file.separator").equals("/"))
-			return "/vn_cont/intexprod/data/cdu";
-		return "s:\\cmo_cdu";
-	}
-
 	public static void main(String args[]) {
 
 		try {
@@ -296,4 +271,3 @@ public class IntexWrapTest2 {
 			System.out.println("Error!:" + e1.toString());
 		}
 	}
-}
