@@ -1,0 +1,2814 @@
+!  CAS_17_C04_PX_UE.CDI  #CMOVER_3.2B WHOLE_LOAN  !  MAX_CF_VECTSIZE 620 
+!
+!! Created by Intex Deal Maker v5.2.233  ,  subroutines 3.3h_p1
+!!   05/23/2017   8:32 AM
+!
+!  Modeled in the Intex CMO Modeling Language, (W1Q91282)
+!  which is copyright (c) 2017 by Intex Solutions, Inc.
+!  Intex shall not be held liable for the accuracy of this data
+!  nor for the accuracy of information which is derived from this data.
+!
+  DEFINE PREPAY PPC IGNORE_AGE RAMP 10
+!
+  DEFINE CONSTANT #OrigCollBal = 30153732576.94
+!
+  DEFINE CONSTANT #OrigBondBal = 30153732576.17
+!
+!
+   FULL_DEALNAME:        CAS_17-C04_Px-ue
+!
+   DEAL SIZE:            30153732576.17
+   PRICING SPEED:        10 CPR
+!  ISSUE DATE:           20170501
+   SETTLEMENT DATE:      20170531
+!
+  Record date delay:     24
+!
+ DEFINE TR_INDEXDEPS_ALL
+!
+ DEFINE SCHEDULE "SHIFT%"
+!
+ DEFINE VARNAMES #Coll_I, #Coll_P
+!
+   DEAL_CLOCK_INFO _
+       ISSUE_CDU_DATE             20170501 _
+       DEAL_FIRSTPAY_DATE         20170625 _
+       DEAL_PAYRULE_FREQ          M
+!
+  DEFINE CLASS "2AH", "SUBORD"
+!
+  DEFINE STANDARDIZE EXCESS_INTEREST              #XSSpread      = 0
+!
+  DEFINE SETTINGS TREAT_FORBEARANCE_AS_INCLUDED_IN_BALANCE
+!
+  DEFINE DYNAMIC STICKY #NetRate  = MAX(0, COLL_I_MISC("COUPON")) / COLL_PREV_BAL * 1200
+!
+  DEFINE DYNAMIC STICKY #NetRateActual360 = #Netrate * 30 / DAYS_DIFF(DAYCOUNT("BD_DATE",CURDATE,FOLLOWING), DAYCOUNT("BD_DATE",MONTHS_ADD(CURDATE,-1),FOLLOWING))
+!
+  DEFINE #BBal_MACRMM2AM2 = 200522000
+  DEFINE #BBal_MACRMM2AM3 = 200522000
+  DEFINE #BBal_MACRMM2AM4 = 200522000
+  DEFINE #BBal_MACRMM2BM2 = 200522000
+  DEFINE #BBal_MACRMM2BM3 = 200522000
+  DEFINE #BBal_MACRMM2BM4 = 200522000
+  DEFINE #BBal_MACRMM2CM2 = 200522000
+  DEFINE #BBal_MACRMM2CM3 = 200522000
+  DEFINE #BBal_MACRMM2CM4 = 200522000
+ DEFINE VARNAMES #CumNetCreditAmt2, #CumNetLoss2, #CreditNetLoss2[120], #PrincLossAmt2, #SenPct2
+!
+  DEFINE STANDARDIZE REV_CREDIT_EVENT_PCT _
+  FULL_NAME "Reversed Credit Event Percentage, Group 2" _
+  DESCRIPTION "Use this input to forecast a percentage of group 2 Credit Events that have been reversed.  _
+The Reversed Credit Event Amount will be this percentage multiplied by the Credit Event Amount corresponding _
+to the period designated by the Reversed Credit Event Lag." _
+  DYNAMIC STICKY #CreditRevPct2 = 0
+!
+  DEFINE STANDARDIZE REV_CREDIT_EVENT_LAG _
+  FULL_NAME "Reversed Credit Event Lag, Group 2" _
+  DESCRIPTION "Use this input to forecast the time between a Credit Event and its reversal.  _
+The Reversed Credit Event Amount will be Credit Event Amount corresponding to the period designated by this _
+lag multiplied by the the Reversed Credit Event Percentage." _
+  DYNAMIC STICKY #CreditRevLag2 = 0
+!
+DEFINE COLLAT SUM #AddlBalRed2 = LOAN("ADDL_BALRED")
+!
+DEFINE COLLAT SUM #LOST_MOD_INT2 = MAX(0,LOAN_UNMODIFIED("OPTINT") - LOAN_MODIFIED("OPTINT"))
+DEFINE COLLAT SUM #GAIN_MOD_INT2 = MAX(0,LOAN_MODIFIED("OPTINT") - LOAN_UNMODIFIED("OPTINT"))
+!
+TOLERANCE WRITEDOWN_0LOSS 1.00
+!
+!
+!
+  INITIAL INDEX    LIBOR_1MO       0.98911
+!
+DEFINE SETTINGS CASHFLOW_REINVESTMENT_ALLOWED NO
+!
+DEFINE TRANCHE "2AI1", "2BI1", "2CI1", "2AH", "2M1", "2M1H", "2EA1", "2M2AH", "2EB1", "2M2BH", "2EC1", "2M2CH", "2B1", "2B1H", "2B2H", "2M2A", "2M2B", "2M2C", "2M2", "2EA2", "2AI2", "2EA3", "2AI3", "2EA4", "2AI4", "2EB2", "2BI2", "2EB3", "2BI3", "2EB4", "2BI4", "2EC2", "2CI2", "2EC3", "2CI3", "2EC4", "2CI4", "2ED1", "2ED2", "2ED3", "2ED4", "2ED5", "2EF1", "2EF2", "2EF3", "2EF4", "2EF5", "2X1", "2X2", "2X3", "2X4", "2Y1", "2Y2", "2Y3", "2Y4"
+!
+DEFINE TRANCHE DISPLAY_ORDER "2AH", "2M1", "2M1H", "2M2", "2M2A", "2M2AH", "2M2B", "2M2BH", "2M2C", "2M2CH", "2B1", "2B1H", "2B2H", "2EA1", "2AI1", "2EA2", "2AI2", "2EA3", "2AI3", "2EA4", "2AI4", "2EB1", "2BI1", "2EB2", "2BI2", "2EB3", "2BI3", "2EB4", "2BI4", "2EC1", "2CI1", "2EC2", "2CI2", "2EC3", "2CI3", "2EC4", "2CI4", "2ED1", "2ED2", "2ED3", "2ED4", "2ED5", "2EF1", "2EF2", "2EF3", "2EF4", "2EF5", "2X1", "2X2", "2X3", "2X4", "2Y1", "2Y2", "2Y3", "2Y4"
+!
+!
+Tranche "2AI1" JUN_IO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2AI1#1") LT 0.01);
+   Block 200522000.00 at 2.25  FREQ M   NOTIONAL WITH BLOCK "2EA1#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2BI1" JUN_IO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2BI1#1") LT 0.01);
+   Block 200522000.00 at 2.25  FREQ M   NOTIONAL WITH BLOCK "2EB1#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2CI1" JUN_IO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2CI1#1") LT 0.01);
+   Block 200522000.00 at 2.25  FREQ M   NOTIONAL WITH BLOCK "2EC1#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2AH" SEN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2AH#1") LT 0.01);
+   Block 28947583273.00 at 0  FREQ M _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2M1" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2M1#1") LT 0.01);
+   Block 257814000.00 at 1.83911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 0.85
+     0.85     99
+!
+Tranche "2M1H" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2M1H#1") LT 0.01);
+   Block 13569593.00 at 0  FREQ M _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EA1" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2EA1#1") LT 0.01);
+   Block 200522000.00 at 1.58911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 0.6
+     0.60     99
+!
+Tranche "2M2AH" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2M2AH#1") LT 0.01);
+   Block 10554128.00 at 0  FREQ M _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EB1" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2EB1#1") LT 0.01);
+   Block 200522000.00 at 1.58911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 0.6
+     0.60     99
+!
+Tranche "2M2BH" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2M2BH#1") LT 0.01);
+   Block 10554128.00 at 0  FREQ M _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EC1" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2EC1#1") LT 0.01);
+   Block 200522000.00 at 1.58911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 0.6
+     0.60     99
+!
+Tranche "2M2CH" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2M2CH#1") LT 0.01);
+   Block 10554128.00 at 0  FREQ M _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2B1" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2B1#1") LT 0.01);
+   Block 143230000.00 at 6.03911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 5.05
+     5.05     99
+!
+Tranche "2B1H" JUN_PO ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2B1H#1") LT 0.01);
+   Block 7538663.00 at 0  FREQ M _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2B2H" JUN_FLT ! PAID_DOWN_WHEN (TOTAL_PAYBACK_DUE("2B2H#1") LT 0.01);
+   Block 150768663.17 at 12.98911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 12
+     12     99
+!
+Tranche "2M2A"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA1#1","2AI1#1")) LT 0.01 );
+   Block 200522000.00 at 3.83911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.85
+     2.85     99
+!
+Tranche "2M2B"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB1#1","2BI1#1")) LT 0.01 );
+   Block 200522000.00 at 3.83911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.85
+     2.85     99
+!
+Tranche "2M2C"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EC1#1","2CI1#1")) LT 0.01 );
+   Block 200522000.00 at 3.83911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.85
+     2.85     99
+!
+Tranche "2M2"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2M2A#1","2M2B#1","2M2C#1")) LT 0.01 );
+   Block 601566000.00 at 3.83911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.85
+     2.85     99
+!
+Tranche "2EA2"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA1#1","2AI1#1")) LT 0.01 );
+   Block 200522000.00 at 2.08911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 1.1
+     1.10     99
+!
+Tranche "2AI2"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA1#1","2AI1#1")) LT 0.01 );
+   Block 200522000.00 at 1.75  FREQ M   NOTIONAL WITH BLOCK "2EA2#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EA3"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA1#1","2AI1#1")) LT 0.01 );
+   Block 200522000.00 at 2.58911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 1.6
+     1.60     99
+!
+Tranche "2AI3"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA1#1","2AI1#1")) LT 0.01 );
+   Block 200522000.00 at 1.25  FREQ M   NOTIONAL WITH BLOCK "2EA3#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EA4"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA1#1","2AI1#1")) LT 0.01 );
+   Block 200522000.00 at 3.08911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.1
+     2.10     99
+!
+Tranche "2AI4"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA1#1","2AI1#1")) LT 0.01 );
+   Block 200522000.00 at 0.75  FREQ M   NOTIONAL WITH BLOCK "2EA4#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EB2"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB1#1","2BI1#1")) LT 0.01 );
+   Block 200522000.00 at 2.08911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 1.1
+     1.10     99
+!
+Tranche "2BI2"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB1#1","2BI1#1")) LT 0.01 );
+   Block 200522000.00 at 1.75  FREQ M   NOTIONAL WITH BLOCK "2EB2#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EB3"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB1#1","2BI1#1")) LT 0.01 );
+   Block 200522000.00 at 2.58911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 1.6
+     1.60     99
+!
+Tranche "2BI3"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB1#1","2BI1#1")) LT 0.01 );
+   Block 200522000.00 at 1.25  FREQ M   NOTIONAL WITH BLOCK "2EB3#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EB4"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB1#1","2BI1#1")) LT 0.01 );
+   Block 200522000.00 at 3.08911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.1
+     2.10     99
+!
+Tranche "2BI4"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB1#1","2BI1#1")) LT 0.01 );
+   Block 200522000.00 at 0.75  FREQ M   NOTIONAL WITH BLOCK "2EB4#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EC2"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EC1#1","2CI1#1")) LT 0.01 );
+   Block 200522000.00 at 2.08911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 1.1
+     1.10     99
+!
+Tranche "2CI2"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EC1#1","2CI1#1")) LT 0.01 );
+   Block 200522000.00 at 1.75  FREQ M   NOTIONAL WITH BLOCK "2EC2#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EC3"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EC1#1","2CI1#1")) LT 0.01 );
+   Block 200522000.00 at 2.58911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 1.6
+     1.60     99
+!
+Tranche "2CI3"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EC1#1","2CI1#1")) LT 0.01 );
+   Block 200522000.00 at 1.25  FREQ M   NOTIONAL WITH BLOCK "2EC3#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2EC4"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EC1#1","2CI1#1")) LT 0.01 );
+   Block 200522000.00 at 3.08911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.1
+     2.10     99
+!
+Tranche "2CI4"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EC1#1","2CI1#1")) LT 0.01 );
+   Block 200522000.00 at 0.75  FREQ M   NOTIONAL WITH BLOCK "2EC4#1" _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2ED1"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA1#1","2EB1#1")) LT 0.01 );
+   Block 401044000.00 at 1.58911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 0.6
+     0.60     99
+!
+Tranche "2ED2"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA2#1","2EB2#1")) LT 0.01 );
+   Block 401044000.00 at 2.48911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 1.5
+     1.50     99
+!
+Tranche "2ED3"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA3#1","2EB3#1")) LT 0.01 );
+   Block 401044000.00 at 2.98911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2
+     2.00     99
+!
+Tranche "2ED4"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EA4#1","2EB4#1")) LT 0.01 );
+   Block 401044000.00 at 3.48911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.5
+     2.50     99
+!
+Tranche "2ED5"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2M2A#1","2M2B#1")) LT 0.01 );
+   Block 401044000.00 at 3.83911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.85
+     2.85     99
+!
+Tranche "2EF1"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB1#1","2EC1#1")) LT 0.01 );
+   Block 401044000.00 at 1.58911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 0.6
+     0.60     99
+!
+Tranche "2EF2"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB2#1","2EC2#1")) LT 0.01 );
+   Block 401044000.00 at 2.48911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 1.5
+     1.50     99
+!
+Tranche "2EF3"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB3#1","2EC3#1")) LT 0.01 );
+   Block 401044000.00 at 2.98911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2
+     2.00     99
+!
+Tranche "2EF4"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2EB4#1","2EC4#1")) LT 0.01 );
+   Block 401044000.00 at 3.48911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.5
+     2.50     99
+!
+Tranche "2EF5"  EXCHANGE JUN_FLT ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2M2B#1","2M2C#1")) LT 0.01 );
+   Block 401044000.00 at 3.83911  FREQ M FLOAT _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+     1 * LIBOR_1MO + 2.85
+     2.85     99
+!
+Tranche "2X1"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2AI1#1","2BI1#1")) LT 0.01 );
+   Block 401044000.00 at 2.25  FREQ M NOTIONAL WITH FORMULA BEGIN ( TBAL("2AI1") + TBAL("2BI1") ); _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2X2"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2AI2#1","2BI2#1")) LT 0.01 );
+   Block 401044000.00 at 1.75  FREQ M NOTIONAL WITH FORMULA BEGIN ( TBAL("2AI2") + TBAL("2BI2") ); _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2X3"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2AI3#1","2BI3#1")) LT 0.01 );
+   Block 401044000.00 at 1.25  FREQ M NOTIONAL WITH FORMULA BEGIN ( TBAL("2AI3") + TBAL("2BI3") ); _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2X4"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2AI4#1","2BI4#1")) LT 0.01 );
+   Block 401044000.00 at 0.75  FREQ M NOTIONAL WITH FORMULA BEGIN ( TBAL("2AI4") + TBAL("2BI4") ); _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2Y1"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2BI1#1","2CI1#1")) LT 0.01 );
+   Block 401044000.00 at 2.25  FREQ M NOTIONAL WITH FORMULA BEGIN ( TBAL("2BI1") + TBAL("2CI1") ); _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2Y2"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2BI2#1","2CI2#1")) LT 0.01 );
+   Block 401044000.00 at 1.75  FREQ M NOTIONAL WITH FORMULA BEGIN ( TBAL("2BI2") + TBAL("2CI2") ); _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2Y3"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2BI3#1","2CI3#1")) LT 0.01 );
+   Block 401044000.00 at 1.25  FREQ M NOTIONAL WITH FORMULA BEGIN ( TBAL("2BI3") + TBAL("2CI3") ); _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+Tranche "2Y4"  EXCHANGE JUN_IO ! PAID_DOWN_WHEN ( (TOTAL_PAYBACK_DUE("2BI4#1","2CI4#1")) LT 0.01 );
+   Block 401044000.00 at 0.75  FREQ M NOTIONAL WITH FORMULA BEGIN ( TBAL("2BI4") + TBAL("2CI4") ); _
+          DAYCOUNT ACTUAL360 BUSINESS_DAY FOLLOWING _
+          Delay 0  Dated 20170531  Next 20170625
+!
+DEFINE PSEUDO_TRANCHE COLLAT _
+   Delay 24 Dated 20170501 Next 20170625 Settle 20170531
+!
+  CREDIT_SUPPORT_BASIS DEAL
+!
+  CLASS "2AH"       NO_BUILD_TRANCHE _
+                    = "2AH"
+  CLASS "2M1"       NO_BUILD_TRANCHE _
+                    = "2M1"
+  CLASS "2M1H"      NO_BUILD_TRANCHE _
+                    = "2M1H"
+  CLASS "2EA1"      NO_BUILD_TRANCHE _
+                    = "2EA1"
+  CLASS "2AI1"      NO_BUILD_TRANCHE _
+                    = "2AI1"
+  CLASS "2M2AH"     NO_BUILD_TRANCHE _
+                    = "2M2AH"
+  CLASS "2EB1"      NO_BUILD_TRANCHE _
+                    = "2EB1"
+  CLASS "2BI1"      NO_BUILD_TRANCHE _
+                    = "2BI1"
+  CLASS "2M2BH"     NO_BUILD_TRANCHE _
+                    = "2M2BH"
+  CLASS "2EC1"      NO_BUILD_TRANCHE _
+                    = "2EC1"
+  CLASS "2CI1"      NO_BUILD_TRANCHE _
+                    = "2CI1"
+  CLASS "2M2CH"     NO_BUILD_TRANCHE _
+                    = "2M2CH"
+  CLASS "2B1"       NO_BUILD_TRANCHE _
+                    = "2B1"
+  CLASS "2B1H"      NO_BUILD_TRANCHE _
+                    = "2B1H"
+  CLASS "2B2H"      NO_BUILD_TRANCHE _
+                    = "2B2H"
+  CLASS "2UM1"      WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "2M1" "2M1H" 
+  CLASS "2M2A-BASE" DISTRIB_CLASS PRORATA  WRITEDOWN_BAL PRORATA _
+                    = "2EA1" "2AI1" 
+  CLASS "2UM2A"     WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "2M2A-BASE" "2M2AH" 
+  CLASS "2M2B-BASE" DISTRIB_CLASS PRORATA  WRITEDOWN_BAL PRORATA _
+                    = "2EB1" "2BI1" 
+  CLASS "2UM2B"     WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "2M2B-BASE" "2M2BH" 
+  CLASS "2M2C-BASE" DISTRIB_CLASS PRORATA  WRITEDOWN_BAL PRORATA _
+                    = "2EC1" "2CI1" 
+  CLASS "2UM2C"     WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "2M2C-BASE" "2M2CH" 
+  CLASS "2UB1"      WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "2B1" "2B1H" 
+  CLASS "2UB2"      WRITEDOWN_BAL PRORATA ALLOCATION _
+                    = "2B2H" 
+  CLASS "2SUB"      WRITEDOWN_BAL SUBORD ALLOCATION _
+                    = "2UM1" "2UM2A" "2UM2B" "2UM2C" "2UB1" "2UB2" 
+  CLASS "SUBORD"    WRITEDOWN_BAL SUBORD _
+                    = "2SUB" 
+  CLASS "2EA2"      NO_BUILD_TRANCHE _
+                    = "2EA2"
+  CLASS "2AI2"      NO_BUILD_TRANCHE _
+                    = "2AI2"
+  CLASS "2EA3"      NO_BUILD_TRANCHE _
+                    = "2EA3"
+  CLASS "2AI3"      NO_BUILD_TRANCHE _
+                    = "2AI3"
+  CLASS "2EA4"      NO_BUILD_TRANCHE _
+                    = "2EA4"
+  CLASS "2AI4"      NO_BUILD_TRANCHE _
+                    = "2AI4"
+  CLASS "2EB2"      NO_BUILD_TRANCHE _
+                    = "2EB2"
+  CLASS "2BI2"      NO_BUILD_TRANCHE _
+                    = "2BI2"
+  CLASS "2EB3"      NO_BUILD_TRANCHE _
+                    = "2EB3"
+  CLASS "2BI3"      NO_BUILD_TRANCHE _
+                    = "2BI3"
+  CLASS "2EB4"      NO_BUILD_TRANCHE _
+                    = "2EB4"
+  CLASS "2BI4"      NO_BUILD_TRANCHE _
+                    = "2BI4"
+  CLASS "2EC2"      NO_BUILD_TRANCHE _
+                    = "2EC2"
+  CLASS "2CI2"      NO_BUILD_TRANCHE _
+                    = "2CI2"
+  CLASS "2EC3"      NO_BUILD_TRANCHE _
+                    = "2EC3"
+  CLASS "2CI3"      NO_BUILD_TRANCHE _
+                    = "2CI3"
+  CLASS "2EC4"      NO_BUILD_TRANCHE _
+                    = "2EC4"
+  CLASS "2CI4"      NO_BUILD_TRANCHE _
+                    = "2CI4"
+  CLASS "2M2A"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2M2A", _
+    COMBINE_CLASSES MACR = "2EA1" "2AI1" 
+  CLASS "2M2B"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2M2B", _
+    COMBINE_CLASSES MACR = "2EB1" "2BI1" 
+  CLASS "2M2C"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2M2C", _
+    COMBINE_CLASSES MACR = "2EC1" "2CI1" 
+  CLASS "2M2"       NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2M2", _
+    COMBINE_CLASSES MACR = "2M2A" "2M2B" "2M2C" 
+  CLASS "2ED1"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2ED1", _
+    COMBINE_CLASSES MACR = "2EA1" "2EB1" 
+  CLASS "2ED2"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2ED2", _
+    COMBINE_CLASSES MACR = "2EA2" "2EB2" 
+  CLASS "2ED3"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2ED3", _
+    COMBINE_CLASSES MACR = "2EA3" "2EB3" 
+  CLASS "2ED4"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2ED4", _
+    COMBINE_CLASSES MACR = "2EA4" "2EB4" 
+  CLASS "2ED5"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2ED5", _
+    COMBINE_CLASSES MACR = "2M2A" "2M2B" 
+  CLASS "2EF1"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2EF1", _
+    COMBINE_CLASSES MACR = "2EB1" "2EC1" 
+  CLASS "2EF2"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2EF2", _
+    COMBINE_CLASSES MACR = "2EB2" "2EC2" 
+  CLASS "2EF3"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2EF3", _
+    COMBINE_CLASSES MACR = "2EB3" "2EC3" 
+  CLASS "2EF4"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2EF4", _
+    COMBINE_CLASSES MACR = "2EB4" "2EC4" 
+  CLASS "2EF5"      NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2EF5", _
+    COMBINE_CLASSES MACR = "2M2B" "2M2C" 
+  CLASS "2X1"       NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2X1", _
+    COMBINE_CLASSES MACR = "2AI1" "2BI1" 
+  CLASS "2X2"       NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2X2", _
+    COMBINE_CLASSES MACR = "2AI2" "2BI2" 
+  CLASS "2X3"       NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2X3", _
+    COMBINE_CLASSES MACR = "2AI3" "2BI3" 
+  CLASS "2X4"       NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2X4", _
+    COMBINE_CLASSES MACR = "2AI4" "2BI4" 
+  CLASS "2Y1"       NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2Y1", _
+    COMBINE_CLASSES MACR = "2BI1" "2CI1" 
+  CLASS "2Y2"       NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2Y2", _
+    COMBINE_CLASSES MACR = "2BI2" "2CI2" 
+  CLASS "2Y3"       NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2Y3", _
+    COMBINE_CLASSES MACR = "2BI3" "2CI3" 
+  CLASS "2Y4"       NO_BUILD_TRANCHE _
+                  DISTRIB_CLASS RULES _
+                    = "2Y4", _
+    COMBINE_CLASSES MACR = "2BI4" "2CI4" 
+  CLASS "MACR-M2A-2" _
+                 WRITEDOWN_BAL PRORATA _
+                 DISTRIB_CLASS RULES _
+                    = "2EA2" "2AI2" , _
+    COMBINE_CLASSES MACR = "2EA1" "2AI1" 
+  CLASS "MACR-M2A-3" _
+                 WRITEDOWN_BAL PRORATA _
+                 DISTRIB_CLASS RULES _
+                    = "2EA3" "2AI3" , _
+    COMBINE_CLASSES MACR = "2EA1" "2AI1" 
+  CLASS "MACR-M2A-4" _
+                 WRITEDOWN_BAL PRORATA _
+                 DISTRIB_CLASS RULES _
+                    = "2EA4" "2AI4" , _
+    COMBINE_CLASSES MACR = "2EA1" "2AI1" 
+  CLASS "MACR-M2B-2" _
+                 WRITEDOWN_BAL PRORATA _
+                 DISTRIB_CLASS RULES _
+                    = "2EB2" "2BI2" , _
+    COMBINE_CLASSES MACR = "2EB1" "2BI1" 
+  CLASS "MACR-M2B-3" _
+                 WRITEDOWN_BAL PRORATA _
+                 DISTRIB_CLASS RULES _
+                    = "2EB3" "2BI3" , _
+    COMBINE_CLASSES MACR = "2EB1" "2BI1" 
+  CLASS "MACR-M2B-4" _
+                 WRITEDOWN_BAL PRORATA _
+                 DISTRIB_CLASS RULES _
+                    = "2EB4" "2BI4" , _
+    COMBINE_CLASSES MACR = "2EB1" "2BI1" 
+  CLASS "MACR-M2C-2" _
+                 WRITEDOWN_BAL PRORATA _
+                 DISTRIB_CLASS RULES _
+                    = "2EC2" "2CI2" , _
+    COMBINE_CLASSES MACR = "2EC1" "2CI1" 
+  CLASS "MACR-M2C-3" _
+                 WRITEDOWN_BAL PRORATA _
+                 DISTRIB_CLASS RULES _
+                    = "2EC3" "2CI3" , _
+    COMBINE_CLASSES MACR = "2EC1" "2CI1" 
+  CLASS "MACR-M2C-4" _
+                 WRITEDOWN_BAL PRORATA _
+                 DISTRIB_CLASS RULES _
+                    = "2EC4" "2CI4" , _
+    COMBINE_CLASSES MACR = "2EC1" "2CI1" 
+!
+!
+  CLASS "ROOT" _
+                 WRITEDOWN_BAL RULES _
+                   = "2AH" "SUBORD" 
+!
+  CROSSOVER When 0
+!
+TRIGGER "MinCredTest2" _
+        FULL_NAME   "Minimum Credit Enhancement Group 2 Test" _
+        DEFINITION "A Minimum Credit Enhancement Test will not be satisfied if the Subordinate Percentage of group 2 is less than 4.50%."_
+        TYPE CONDITION CRED_SUPP _
+        ORIG_TESTVAL    4.000000% _
+        TESTVAL         ( ROUND( BBAL("SUBORD") / COLL_PREV_BAL, 8) ); _
+        ORIG_TARGETVAL  ( 4.250000% ); _
+        TARGETVAL       ( 4.250000% ); _
+        IMPACT          "Unscheduled principal that was intended to be paid to the subordinate bonds will now be directed to the senior bonds." _
+        TRIGVAL         HIPASS
+!
+TRIGGER "Delinquency2" _
+        FULL_NAME   "Group 2 Delinquency Test" _
+        DEFINITION "The Group 2 Delinquency Test will not be satisfied if ; _
+ the 6 month average of 90+ delinquencies is greater than _
+40% of the amount by which (i) the product of (x) the Subordinate Percentage and (y) the aggregate balance of the reference obligations as of the preceding Payment Date; exceeds (ii) the Principal _
+ Loss Amount for the current Payment Date _
+"_
+        IMPACT     "Unscheduled principal that was intended to be paid to the subordinate bonds will now be directed to the senior bonds." _
+        TYPE CASHFLOW DELINQ _
+        ORIG_TESTVAL    0.00% _
+        TESTVAL         (((AVG_COLL("BAL",-1,3,1) + AVG_COLL("BAL",0,3,1) + AVG_COLL("BAL",1,3,1) + AVG_COLL("BAL",2,3,1) + AVG_COLL("BAL",3,3,1) + AVG_COLL("BAL",4,3,1))/(IF CURMONTH GE 6 THEN 6 ELSE CURMONTH)) / MAX(0, ((1 - #SenPct2) * COLL_PREV_BAL) - #PrincLossAmt2)); _
+        TARGETVAL       (40%); _
+        ORIG_TARGETVAL  40% _
+        TRIGVAL         LODIFF
+!
+  OPTIONAL REDEMPTION:    "Cleanup" _
+                          FULL_NAME "Cleanup Call Option" _
+                          DESCRIPTION "This call may be exercised on any distribution date on which the aggregate principal balance of the collateral is less than 10% of the aggregate principal balance of the collateral as of the cut-off date." _
+                          COLL_FRAC 10% _
+                          PRICE_P ( COLL_BAL ); _
+                          DISTR_P RULES "OPTR_DEAL"
+!
+  OPTIONAL REDEMPTION:    "MandRdm" _
+                          FULL_NAME "Termination" _
+                          DESCRIPTION "This call will be exercised on any distribution date on which the current date is greater than or equal to 20280825." _
+                          MANDATORY _
+                          DATE 20291101 _
+                          PRICE_P ( COLL_BAL ); _
+                          DISTR_P RULES "OPTR_DEAL"
+!
+  OPTIONAL REDEMPTION:    "OptionalRdm" _
+                          FULL_NAME "Optional Redemption" _
+                          DESCRIPTION "This call may be exercised on any distribution date on which the current date is greater than or equal to 20260225." _
+                          DATE 20270501 _
+                          PRICE_P ( COLL_BAL ); _
+                          DISTR_P RULES "OPTR_DEAL"
+!
+!
+ INTEREST_SHORTFALL           FULL_PREPAY    Compensate Pro_rata _
+                              PARTIAL_PREPAY Compensate Pro_rata _
+                              LOSS           NO_Compensate SUBORDINATED ACCUM
+!
+!
+ CMO Block Payment Rules
+------------------------------------
+   calculate :  #Coll_I              = COLL_I + CF_REINV_INCOME
+   calculate :  #Coll_P              = COLL_P
+------------------------------------
+   calculate :  #BBal_MACRMM2AM2     = BBAL("2EA2#1")
+   calculate :  #BBal_MACRMM2AM3     = BBAL("2EA3#1")
+   calculate :  #BBal_MACRMM2AM4     = BBAL("2EA4#1")
+   calculate :  #BBal_MACRMM2BM2     = BBAL("2EB2#1")
+   calculate :  #BBal_MACRMM2BM3     = BBAL("2EB3#1")
+   calculate :  #BBal_MACRMM2BM4     = BBAL("2EB4#1")
+   calculate :  #BBal_MACRMM2CM2     = BBAL("2EC2#1")
+   calculate :  #BBal_MACRMM2CM3     = BBAL("2EC3#1")
+   calculate :  #BBal_MACRMM2CM4     = BBAL("2EC4#1")
+------------------------------------
+   calculate :  #BegWDBAL_2EA1       = WDBAL_ACCUM("2EA1#1")
+   calculate :  #BegWDBAL_2AI1       = WDBAL_ACCUM("2AI1#1")
+   calculate :  #BegWDBAL_2EB1       = WDBAL_ACCUM("2EB1#1")
+   calculate :  #BegWDBAL_2BI1       = WDBAL_ACCUM("2BI1#1")
+   calculate :  #BegWDBAL_2EC1       = WDBAL_ACCUM("2EC1#1")
+   calculate :  #BegWDBAL_2CI1       = WDBAL_ACCUM("2CI1#1")
+   calculate :  #BegWDBAL_2M2A       = WDBAL_ACCUM("2M2A#1")
+   calculate :  #BegWDBAL_2M2B       = WDBAL_ACCUM("2M2B#1")
+   calculate :  #BegWDBAL_2M2C       = WDBAL_ACCUM("2M2C#1")
+   calculate :  #BegWDBAL_2EA2       = WDBAL_ACCUM("2EA2#1")
+   calculate :  #BegWDBAL_2EB2       = WDBAL_ACCUM("2EB2#1")
+   calculate :  #BegWDBAL_2EA3       = WDBAL_ACCUM("2EA3#1")
+   calculate :  #BegWDBAL_2EB3       = WDBAL_ACCUM("2EB3#1")
+   calculate :  #BegWDBAL_2EA4       = WDBAL_ACCUM("2EA4#1")
+   calculate :  #BegWDBAL_2EB4       = WDBAL_ACCUM("2EB4#1")
+   calculate :  #BegWDBAL_2EC2       = WDBAL_ACCUM("2EC2#1")
+   calculate :  #BegWDBAL_2EC3       = WDBAL_ACCUM("2EC3#1")
+   calculate :  #BegWDBAL_2EC4       = WDBAL_ACCUM("2EC4#1")
+   calculate :  #BegWDBAL_2AI2       = WDBAL_ACCUM("2AI2#1")
+   calculate :  #BegWDBAL_2BI2       = WDBAL_ACCUM("2BI2#1")
+   calculate :  #BegWDBAL_2AI3       = WDBAL_ACCUM("2AI3#1")
+   calculate :  #BegWDBAL_2BI3       = WDBAL_ACCUM("2BI3#1")
+   calculate :  #BegWDBAL_2AI4       = WDBAL_ACCUM("2AI4#1")
+   calculate :  #BegWDBAL_2BI4       = WDBAL_ACCUM("2BI4#1")
+   calculate :  #BegWDBAL_2CI2       = WDBAL_ACCUM("2CI2#1")
+   calculate :  #BegWDBAL_2CI3       = WDBAL_ACCUM("2CI3#1")
+   calculate :  #BegWDBAL_2CI4       = WDBAL_ACCUM("2CI4#1")
+------------------------------------
+   calculate :  #CreditEventAmt2      = DELINQ_LIQUIDATE - #AddlBalRed2
+   calculate :  #CreditNetLoss2[MOD(CURMONTH,120)+1] = MAX(0, #CreditEventAmt2 - DELINQ_RECOVER)
+   calculate :  #CreditNetGain2       = MAX(0, DELINQ_RECOVER - #CreditEventAmt2)
+!
+   calculate :  #CreditNetLossTestRevLag2 = IF CURMONTH - #CreditRevLag2 > 0 THEN #CreditNetLoss2[MOD(CURMONTH-#CreditRevLag2,120)+1] ELSE 0
+   calculate :  #RevCreditNetLoss2    = #CreditNetLossTestRevLag2 * #CreditRevPct2 / 100
+!
+   calculate :  #PrincRecAmt2         = #CreditNetGain2 + #RevCreditNetLoss2 + COLL_P_MISC("REC_PREVLOSS")
+   calculate :  #PrincRecAmtAccum2    = #PrincRecAmtAccum2 + #PrincRecAmt2
+!
+   calculate :  #ModShortfall2        = #LOST_MOD_INT2
+!
+   calculate :  #ModLossAmt2          = #ModShortfall2
+   calculate :  #ModLossAmtSave2      = #ModLossAmt2
+!
+   calculate :  #PrincLossAmtPrelim2  = #CreditNetLoss2[MOD(CURMONTH,120)+1]
+   calculate :  #CalcTrWdAmtPrelim2   = MAX(0, #PrincLossAmtPrelim2 - #PrincRecAmt2)
+   calculate :  #CalcTrWuAmtPrelim2   = MAX(0, #PrincRecAmt2 - #PrincLossAmtPrelim2)
+!
+   calculate :  #WD_2B2H_Prelim       = MIN(#CalcTrWdAmtPrelim2, BBAL("2B2H"))
+   calculate :  #CalcTrWdAmtPrelim2   = MAX(0, #CalcTrWdAmtPrelim2 - #WD_2B2H_Prelim)
+
+   calculate :  #WD_2B1_2B1H_Prelim   = MIN(#CalcTrWdAmtPrelim2, BBAL("2B1", "2B1H"))
+   calculate :  #WD_2B1_Prelim        = #WD_2B1_2B1H_Prelim * BBAL("2B1")/BBAL("2B1", "2B1H")
+   calculate :  #WD_2B1H_Prelim       = #WD_2B1_2B1H_Prelim * BBAL("2B1H")/BBAL("2B1", "2B1H")
+   calculate :  #CalcTrWdAmtPrelim2   = MAX(0, #CalcTrWdAmtPrelim2 - #WD_2B1_2B1H_Prelim)
+
+   calculate :  #WD_2M2C_2M2CH_Prelim = MIN(#CalcTrWdAmtPrelim2, BBAL("2EC1", "2M2CH"))
+   calculate :  #WD_2M2C_Prelim       = #WD_2M2C_2M2CH_Prelim * BBAL("2EC1")/BBAL("2EC1", "2M2CH")
+   calculate :  #WD_2M2CH_Prelim      = #WD_2M2C_2M2CH_Prelim * BBAL("2M2CH")/BBAL("2EC1", "2M2CH")
+   calculate :  #CalcTrWdAmtPrelim2   = MAX(0, #CalcTrWdAmtPrelim2 - #WD_2M2C_2M2CH_Prelim)
+
+   calculate :  #WD_2M2B_2M2BH_Prelim = MIN(#CalcTrWdAmtPrelim2, BBAL("2EB1", "2M2BH"))
+   calculate :  #WD_2M2B_Prelim       = #WD_2M2B_2M2BH_Prelim * BBAL("2EB1")/BBAL("2EB1", "2M2BH")
+   calculate :  #WD_2M2BH_Prelim      = #WD_2M2B_2M2BH_Prelim * BBAL("2M2BH")/BBAL("2EB1", "2M2BH")
+   calculate :  #CalcTrWdAmtPrelim2   = MAX(0, #CalcTrWdAmtPrelim2 - #WD_2M2B_2M2BH_Prelim)
+
+   calculate :  #WD_2M2A_2M2AH_Prelim = MIN(#CalcTrWdAmtPrelim2, BBAL("2EA1", "2M2AH"))
+   calculate :  #WD_2M2A_Prelim       = #WD_2M2A_2M2AH_Prelim * BBAL("2EA1")/BBAL("2EA1", "2M2AH")
+   calculate :  #WD_2M2AH_Prelim      = #WD_2M2A_2M2AH_Prelim * BBAL("2M2AH")/BBAL("2EA1", "2M2AH")
+   calculate :  #CalcTrWdAmtPrelim2   = MAX(0, #CalcTrWdAmtPrelim2 - #WD_2M2A_2M2AH_Prelim)
+
+   calculate :  #WD_2M1_2M1H_Prelim   = MIN(#CalcTrWdAmtPrelim2, BBAL("2M1", "2M1H"))
+   calculate :  #WD_2M1_Prelim        = #WD_2M1_2M1H_Prelim * BBAL("2M1")/BBAL("2M1", "2M1H")
+   calculate :  #WD_2M1H_Prelim       = #WD_2M1_2M1H_Prelim * BBAL("2M1H")/BBAL("2M1", "2M1H")
+   calculate :  #CalcTrWdAmtPrelim2   = MAX(0, #CalcTrWdAmtPrelim2 - #WD_2M1_2M1H_Prelim)
+
+   calculate :  #WD_2AH_Prelim        = MIN(#CalcTrWdAmtPrelim2, BBAL("2AH"))
+   calculate :  #CalcTrWdAmtPrelim2   = MAX(0, #CalcTrWdAmtPrelim2 - #WD_2AH_Prelim)
+!
+   calculate :  #WU_2AH_Prelim        = MIN(#CalcTrWuAmtPrelim2, WDBAL_ACCUM("2AH"))
+   calculate :  #CalcTrWuAmtPrelim2   = MAX(0, #CalcTrWuAmtPrelim2 - #WU_2AH_Prelim)
+
+   calculate :  #WU_2M1_2M1H_Prelim   = MIN(#CalcTrWuAmtPrelim2, WDBAL_ACCUM("2M1", "2M1H"))
+   calculate :  #WU_2M1_Prelim        = #WU_2M1_2M1H_Prelim * BBAL("2M1")/BBAL("2M1", "2M1H")
+   calculate :  #WU_2M1H_Prelim       = #WU_2M1_2M1H_Prelim * BBAL("2M1H")/BBAL("2M1", "2M1H")
+   calculate :  #CalcTrWuAmtPrelim2   = MAX(0, #CalcTrWuAmtPrelim2 - #WU_2M1_2M1H_Prelim)
+
+   calculate :  #WU_2M2A_2M2AH_Prelim = MIN(#CalcTrWuAmtPrelim2, WDBAL_ACCUM("2EA1", "2M2AH"))
+   calculate :  #WU_2M2A_Prelim       = #WU_2M2A_2M2AH_Prelim * BBAL("2EA1")/BBAL("2EA1", "2M2AH")
+   calculate :  #WU_2M2AH_Prelim      = #WU_2M2A_2M2AH_Prelim * BBAL("2M2AH")/BBAL("2EA1", "2M2AH")
+   calculate :  #CalcTrWuAmtPrelim2   = MAX(0, #CalcTrWuAmtPrelim2 - #WU_2M2A_2M2AH_Prelim)
+
+   calculate :  #WU_2M2B_2M2BH_Prelim = MIN(#CalcTrWuAmtPrelim2, WDBAL_ACCUM("2EB1", "2M2BH"))
+   calculate :  #WU_2M2B_Prelim       = #WU_2M2B_2M2BH_Prelim * BBAL("2EB4")/BBAL("2EB1", "2M2BH")
+   calculate :  #WU_2M2BH_Prelim      = #WU_2M2B_2M2BH_Prelim * BBAL("2M2BH")/BBAL("2EB1", "2M2BH")
+   calculate :  #CalcTrWuAmtPrelim1   = MAX(0, #CalcTrWuAmtPrelim2 - #WU_2M2B_2M2BH_Prelim)
+
+   calculate :  #WU_2M2C_2M2CH_Prelim = MIN(#CalcTrWuAmtPrelim2, WDBAL_ACCUM("2EC1", "2M2CH"))
+   calculate :  #WU_2M2C_Prelim       = #WU_2M2C_2M2CH_Prelim * BBAL("2EC4")/BBAL("2EC1", "2M2CH")
+   calculate :  #WU_2M2CH_Prelim      = #WU_2M2C_2M2CH_Prelim * BBAL("2M2CH")/BBAL("2EC1", "2M2CH")
+   calculate :  #CalcTrWuAmtPrelim2   = MAX(0, #CalcTrWuAmtPrelim2 - #WU_2M2C_2M2CH_Prelim)
+
+   calculate :  #WU_2B1_2B1H_Prelim   = MIN(#CalcTrWuAmtPrelim2, WDBAL_ACCUM("2B1", "2B1H"))
+   calculate :  #WU_2B1_Prelim        = #WU_2B1_2B1H_Prelim * BBAL("2B1")/BBAL("2B1", "2B1H")
+   calculate :  #WU_2B1H_Prelim       = #WU_2B1_2B1H_Prelim * BBAL("2B1H")/BBAL("2B1", "2B1H")
+   calculate :  #CalcTrWuAmtPrelim2   = MAX(0, #CalcTrWuAmtPrelim2 - #WU_2B1_2B1H_Prelim)
+
+   calculate :  #WU_2B2H_Prelim       = MIN(#CalcTrWuAmtPrelim2, WDBAL_ACCUM("2B2H"))
+   calculate :  #CalcTrWuAmtPrelim2   = MAX(0, #CalcTrWuAmtPrelim2 - #WU_2B2H_Prelim)
+!
+   calculate :  #BBAL_2AH_Prelim      = MAX(0, BBAL("2AH") -   #WD_2AH_Prelim +   #WU_2AH_Prelim)
+   calculate :  #BBAL_2M1_Prelim      = MAX(0, BBAL("2M1") -   #WD_2M1_Prelim +   #WU_2M1_Prelim)
+   calculate :  #BBAL_2M1H_Prelim     = MAX(0, BBAL("2M1H") -  #WD_2M1H_Prelim +  #WU_2M1H_Prelim)
+   calculate :  #BBAL_2M2A_Prelim     = MAX(0, BBAL("2EA1") -  #WD_2M2A_Prelim +  #WU_2M2A_Prelim)
+   calculate :  #BBAL_2M2AH_Prelim    = MAX(0, BBAL("2M2AH") - #WD_2M2AH_Prelim + #WU_2M2AH_Prelim)
+   calculate :  #BBAL_2M2B_Prelim     = MAX(0, BBAL("2EB1") -  #WD_2M2B_Prelim +  #WU_2M2B_Prelim)
+   calculate :  #BBAL_2M2BH_Prelim    = MAX(0, BBAL("2M2BH") - #WD_2M2BH_Prelim + #WU_2M2BH_Prelim)
+   calculate :  #BBAL_2M2C_Prelim     = MAX(0, BBAL("2EC1") -  #WD_2M2C_Prelim +  #WU_2M2C_Prelim)
+   calculate :  #BBAL_2M2CH_Prelim    = MAX(0, BBAL("2M2CH") - #WD_2M2CH_Prelim + #WU_2M2CH_Prelim)
+   calculate :  #BBAL_2B1_Prelim      = MAX(0, BBAL("2B1") -   #WD_2B1_Prelim +   #WU_2B1_Prelim)
+   calculate :  #BBAL_2B1H_Prelim     = MAX(0, BBAL("2B1H") -  #WD_2B1H_Prelim +  #WU_2B1H_Prelim)
+   calculate :  #BBAL_2B2H_Prelim     = MAX(0, BBAL("2B2H") -  #WD_2B2H_Prelim +  #WU_2B2H_Prelim)
+!
+   calculate :  #ModIntLoss_2B2H             = MIN(OPTIMAL_INTPMT("2B2H"), #ModLossAmt2)
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModIntLoss_2B2H)
+   calculate :  #ModPrincLoss_2B2H           = MIN(#ModLossAmt2, #BBAL_2B2H_Prelim)
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModPrincLoss_2B2H)
+
+   calculate :  #ModIntBalShare_2B1          = BBAL("2B1") / BBAL("2B1", "2B1H")
+   calculate :  #ModIntBalShare_2B1H         = BBAL("2B1H") / BBAL("2B1", "2B1H")
+   calculate :  #ModIntCap_2B1               = IF COUPON("2B1") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2B1")
+   calculate :  #ModIntCap_2B1H              = IF COUPON("2B1H") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2B1H")
+   calculate :  #ModIntCapShare_2B1          = MIN(#ModIntBalShare_2B1, #ModIntCap_2B1 / #ModLossAmt2)
+   calculate :  #ModIntCapShare_2B1H         = MIN(#ModIntBalShare_2B1H, #ModIntCap_2B1H / #ModLossAmt2)
+   calculate :  #ReductionFracPct_2B1        = IF COUPON("2B1") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2B1 - #ModIntCapShare_2B1) / #ModIntBalShare_2B1
+   calculate :  #ReductionFracPct_2B1H       = IF COUPON("2B1H") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2B1H - #ModIntCapShare_2B1H) / #ModIntBalShare_2B1H
+   calculate :  #MinReduceFracPct_2B1_2B1H   = MIN(#ReductionFracPct_2B1, #ReductionFracPct_2B1H)
+   calculate :  #ModIntLoss_2B1              = IF COUPON("2B1") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2B1 * MAX(0, 1 - #MinReduceFracPct_2B1_2B1H) ELSE #ModLossAmt2 * #ModIntCapShare_2B1
+   calculate :  #ModIntLoss_2B1H             = IF COUPON("2B1H") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2B1H * MAX(0, 1 - #MinReduceFracPct_2B1_2B1H) ELSE #ModLossAmt2 * #ModIntCapShare_2B1H
+   calculate :  #ModIntLoss_2B1_2B1H         = #ModIntLoss_2B1 + #ModIntLoss_2B1H
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModIntLoss_2B1_2B1H)
+   calculate :  #ModPrincLoss_2B1_2B1H       = MIN(#ModLossAmt2, #BBAL_2B1_Prelim + #BBAL_2B1H_Prelim)
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModPrincLoss_2B1_2B1H)
+
+   calculate :  #ModIntBalShare_2M2C         = BBAL("2EC1") / BBAL("2EC1", "2M2CH")
+   calculate :  #ModIntBalShare_2M2CH        = BBAL("2M2CH") / BBAL("2EC1", "2M2CH")
+   calculate :  #ModIntCap_2M2C              = IF COUPON("2EC1") + COUPON("2CI1") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2EC1") + OPTIMAL_INTPMT("2CI1")
+   calculate :  #ModIntCap_2M2CH             = IF COUPON("2M2CH") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2M2CH")
+   calculate :  #ModIntCapShare_2M2C         = MIN(#ModIntBalShare_2M2C, #ModIntCap_2M2C / #ModLossAmt2)
+   calculate :  #ModIntCapShare_2M2CH        = MIN(#ModIntBalShare_2M2CH, #ModIntCap_2M2CH / #ModLossAmt2)
+   calculate :  #ReductionFracPct_2M2C       = IF COUPON("2EC1") + COUPON("2CI1") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2M2C - #ModIntCapShare_2M2C) / #ModIntBalShare_2M2C
+   calculate :  #ReductionFracPct_2M2CH      = IF COUPON("2M2CH") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2M2CH - #ModIntCapShare_2M2CH) / #ModIntBalShare_2M2CH
+   calculate :  #MinReduceFracPct_2M2C_2M2CH = MIN(#ReductionFracPct_2M2C, #ReductionFracPct_2M2CH)
+   calculate :  #ModIntLoss_2M2C             = IF COUPON("2EC1") + COUPON("2CI1") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2M2C * MAX(0, 1 - #MinReduceFracPct_2M2C_2M2CH) ELSE #ModLossAmt2 * #ModIntCapShare_2M2C
+   calculate :  #ModIntLoss_2M2CH            = IF COUPON("2M2CH") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2M2CH * MAX(0, 1 - #MinReduceFracPct_2M2C_2M2CH) ELSE #ModLossAmt2 * #ModIntCapShare_2M2CH
+   calculate :  #ModIntLoss_2M2C_2M2CH       = #ModIntLoss_2M2C + #ModIntLoss_2M2CH
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModIntLoss_2M2C_2M2CH)
+
+   calculate :  #ModIntBalShare_2M2B         = BBAL("2EB1") / BBAL("2EB1", "2M2BH")
+   calculate :  #ModIntBalShare_2M2BH        = BBAL("2M2BH") / BBAL("2EB1", "2M2BH")
+   calculate :  #ModIntCap_2M2B              = IF COUPON("2EB1") + COUPON("2BI1") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2EB1") + OPTIMAL_INTPMT("2BI1")
+   calculate :  #ModIntCap_2M2BH             = IF COUPON("2M2BH") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2M2BH")
+   calculate :  #ModIntCapShare_2M2B         = MIN(#ModIntBalShare_2M2B, #ModIntCap_2M2B / #ModLossAmt2)
+   calculate :  #ModIntCapShare_2M2BH        = MIN(#ModIntBalShare_2M2BH, #ModIntCap_2M2BH / #ModLossAmt2)
+   calculate :  #ReductionFracPct_2M2B       = IF COUPON("2EB1") + COUPON("2BI1") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2M2B - #ModIntCapShare_2M2B) / #ModIntBalShare_2M2B
+   calculate :  #ReductionFracPct_2M2BH      = IF COUPON("2M2BH") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2M2BH - #ModIntCapShare_2M2BH) / #ModIntBalShare_2M2BH
+   calculate :  #MinReduceFracPct_2M2B_2M2BH = MIN(#ReductionFracPct_2M2B, #ReductionFracPct_2M2BH)
+   calculate :  #ModIntLoss_2M2B             = IF COUPON("2EB1") + COUPON("2BI1") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2M2B * MAX(0, 1 - #MinReduceFracPct_2M2B_2M2BH) ELSE #ModLossAmt2 * #ModIntCapShare_2M2B
+   calculate :  #ModIntLoss_2M2BH            = IF COUPON("2M2BH") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2M2BH * MAX(0, 1 - #MinReduceFracPct_2M2B_2M2BH) ELSE #ModLossAmt2 * #ModIntCapShare_2M2BH
+   calculate :  #ModIntLoss_2M2B_2M2BH       = #ModIntLoss_2M2B + #ModIntLoss_2M2BH
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModIntLoss_2M2B_2M2BH)
+
+   calculate :  #ModIntBalShare_2M2A         = BBAL("2EA1") / BBAL("2EA1", "2M2AH")
+   calculate :  #ModIntBalShare_2M2AH        = BBAL("2M2AH") / BBAL("2EA1", "2M2AH")
+   calculate :  #ModIntCap_2M2A              = IF COUPON("2EA1") + COUPON("2AI1") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2EA1") + OPTIMAL_INTPMT("2AI1")
+   calculate :  #ModIntCap_2M2AH             = IF COUPON("2M2AH") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2M2AH")
+   calculate :  #ModIntCapShare_2M2A         = MIN(#ModIntBalShare_2M2A, #ModIntCap_2M2A / #ModLossAmt2)
+   calculate :  #ModIntCapShare_2M2AH        = MIN(#ModIntBalShare_2M2AH, #ModIntCap_2M2AH / #ModLossAmt2)
+   calculate :  #ReductionFracPct_2M2A       = IF COUPON("2EA1") + COUPON("2AI1") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2M2A - #ModIntCapShare_2M2A) / #ModIntBalShare_2M2A
+   calculate :  #ReductionFracPct_2M2AH      = IF COUPON("2M2AH") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2M2AH - #ModIntCapShare_2M2AH) / #ModIntBalShare_2M2AH
+   calculate :  #MinReduceFracPct_2M2A_2M2AH = MIN(#ReductionFracPct_2M2A, #ReductionFracPct_2M2AH)
+   calculate :  #ModIntLoss_2M2A             = IF COUPON("2EA1") + COUPON("2AI1") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2M2A * MAX(0, 1 - #MinReduceFracPct_2M2A_2M2AH) ELSE #ModLossAmt2 * #ModIntCapShare_2M2A
+   calculate :  #ModIntLoss_2M2AH            = IF COUPON("2M2AH") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2M2AH * MAX(0, 1 - #MinReduceFracPct_2M2A_2M2AH) ELSE #ModLossAmt2 * #ModIntCapShare_2M2AH
+   calculate :  #ModIntLoss_2M2A_2M2AH       = #ModIntLoss_2M2A + #ModIntLoss_2M2AH
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModIntLoss_2M2A_2M2AH)
+
+   calculate :  #ModPrincLoss_2M2C_2M2CH     = MIN(#ModLossAmt2, #BBAL_2M2C_Prelim + #BBAL_2M2CH_Prelim)
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModPrincLoss_2M2C_2M2CH)
+   calculate :  #ModPrincLoss_2M2B_2M2BH     = MIN(#ModLossAmt2, #BBAL_2M2B_Prelim + #BBAL_2M2BH_Prelim)
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModPrincLoss_2M2B_2M2BH)
+   calculate :  #ModPrincLoss_2M2A_2M2AH     = MIN(#ModLossAmt2, #BBAL_2M2A_Prelim + #BBAL_2M2AH_Prelim)
+   calculate :  #ModLossAmt2                 = MAX(0, #ModLossAmt2 - #ModPrincLoss_2M2A_2M2AH)
+
+   calculate :  #ModIntBalShare_2M1        = BBAL("2M1") / BBAL("2M1", "2M1H")
+   calculate :  #ModIntBalShare_2M1H       = BBAL("2M1H") / BBAL("2M1", "2M1H")
+   calculate :  #ModIntCap_2M1             = IF COUPON("2M1") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2M1")
+   calculate :  #ModIntCap_2M1H            = IF COUPON("2M1H") EQ 0 THEN #ModLossAmt2 ELSE OPTIMAL_INTPMT("2M1H")
+   calculate :  #ModIntCapShare_2M1        = MIN(#ModIntBalShare_2M1, #ModIntCap_2M1 / #ModLossAmt2)
+   calculate :  #ModIntCapShare_2M1H       = MIN(#ModIntBalShare_2M1H, #ModIntCap_2M1H / #ModLossAmt2)
+   calculate :  #ReductionFracPct_2M1      = IF COUPON("2M1") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2M1 - #ModIntCapShare_2M1) / #ModIntBalShare_2M1
+   calculate :  #ReductionFracPct_2M1H     = IF COUPON("2M1H") EQ 0 THEN 999 ELSE MAX(0, #ModIntBalShare_2M1H - #ModIntCapShare_2M1H) / #ModIntBalShare_2M1H
+   calculate :  #MinReduceFracPct_2M1_2M1H = MIN(#ReductionFracPct_2M1, #ReductionFracPct_2M1H)
+   calculate :  #ModIntLoss_2M1            = IF COUPON("2M1") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2M1 * MAX(0, 1 - #MinReduceFracPct_2M1_2M1H) ELSE #ModLossAmt2 * #ModIntCapShare_2M1
+   calculate :  #ModIntLoss_2M1H           = IF COUPON("2M1H") EQ 0 THEN #ModLossAmt2 * #ModIntBalShare_2M1H * MAX(0, 1 - #MinReduceFracPct_2M1_2M1H) ELSE #ModLossAmt2 * #ModIntCapShare_2M1H
+   calculate :  #ModIntLoss_2M1_2M1H       = #ModIntLoss_2M1 + #ModIntLoss_2M1H
+   calculate :  #ModLossAmt2               = MAX(0, #ModLossAmt2 - #ModIntLoss_2M1_2M1H)
+   calculate :  #ModPrincLoss_2M1_2M1H     = MIN(#ModLossAmt2, #BBAL_2M1_Prelim + #BBAL_2M1H_Prelim)
+   calculate :  #ModLossAmt2               = MAX(0, #ModLossAmt2 - #ModPrincLoss_2M1_2M1H)
+
+   calculate :  #ModIntLoss_2AH            = MIN(OPTIMAL_INTPMT("2AH"), #ModLossAmt2)
+   calculate :  #ModLossAmt2               = MAX(0, #ModLossAmt2 - #ModIntLoss_2AH)
+   calculate :  #ModPrincLoss_2AH          = MIN(#ModLossAmt2, #BBAL_2AH_Prelim)
+   calculate :  #ModLossAmt2               = MAX(0, #ModLossAmt2 - #ModPrincLoss_2AH)
+!
+   calculate :  #OptInt_2AH           = MAX(0, OPTIMAL_INTPMT("2AH") - #ModIntLoss_2AH)
+   calculate :  #OptInt_2M1           = MAX(0, OPTIMAL_INTPMT("2M1") - #ModIntLoss_2M1)
+   calculate :  #OptInt_2M1H          = MAX(0, OPTIMAL_INTPMT("2M1H") - #ModIntLoss_2M1H)
+   calculate :  #OptInt_2M1_2M1H      = #OptInt_2M1 + #OptInt_2M1H
+   calculate :  #OptInt_2M2A          = MAX(0, OPTIMAL_INTPMT("2EA1") + OPTIMAL_INTPMT("2AI1") - #ModIntLoss_2M2A)
+   calculate :  #OptInt_2M2AH         = MAX(0, OPTIMAL_INTPMT("2M2AH") - #ModIntLoss_2M2AH)
+   calculate :  #OptInt_2M2A_2M2AH    = #OptInt_2M2A + #OptInt_2M2AH
+   calculate :  #OptInt_2M2B          = MAX(0, OPTIMAL_INTPMT("2EB1") + OPTIMAL_INTPMT("2BI1") - #ModIntLoss_2M2B)
+   calculate :  #OptInt_2M2BH         = MAX(0, OPTIMAL_INTPMT("2M2BH") - #ModIntLoss_2M2BH)
+   calculate :  #OptInt_2M2B_2M2BH    = #OptInt_2M2B + #OptInt_2M2BH
+   calculate :  #OptInt_2M2C          = MAX(0, OPTIMAL_INTPMT("2EC1") + OPTIMAL_INTPMT("2CI1") - #ModIntLoss_2M2C)
+   calculate :  #OptInt_2M2CH         = MAX(0, OPTIMAL_INTPMT("2M2CH") - #ModIntLoss_2M2CH)
+   calculate :  #OptInt_2M2C_2M2CH    = #OptInt_2M2C + #OptInt_2M2CH
+   calculate :  #OptInt_2B1           = MAX(0, OPTIMAL_INTPMT("2B1") - #ModIntLoss_2B1)
+   calculate :  #OptInt_2B1H          = MAX(0, OPTIMAL_INTPMT("2B1H") - #ModIntLoss_2B1H)
+   calculate :  #OptInt_2B1_2B1H      = #OptInt_2B1 + #OptInt_2B1H
+   calculate :  #OptInt_2B2H          = MAX(0, OPTIMAL_INTPMT("2B2H") - #ModIntLoss_2B2H)
+!
+   calculate :  #TotalModPrincLoss2   = #ModPrincLoss_2B2H + #ModPrincLoss_2B1_2B1H + #ModPrincLoss_2M2C_2M2CH + #ModPrincLoss_2M2B_2M2BH + #ModPrincLoss_2M2A_2M2AH + #ModPrincLoss_2M1_2M1H + #ModPrincLoss_2AH
+!
+   calculate :  #PrincLossAmt2        = #CreditNetLoss2[MOD(CURMONTH,120)+1] + #TotalModPrincLoss2
+!
+   calculate :  #PrincLossAmtAccum2   = #PrincLossAmtAccum2 + #PrincLossAmt2
+!
+   calculate :  #CalcTrWdAmt2         = MAX(0, #PrincLossAmt2 - #PrincRecAmt2)
+   calculate :  #CalcTrWuAmt2         = MAX(0, #PrincRecAmt2 - #PrincLossAmt2)
+!
+   calculate :  #Recoveries2          = MAX(0, #CreditEventAmt2 - #CalcTrWdAmt2 + #CalcTrWuAmt2)
+!
+   calculate :  #CumNetCreditAmt2     = MAX(0, #CreditEventAmt2 - #RevCreditNetLoss2)
+   calculate :  #CumNetLoss2          = #CumNetLoss2 + (#CalcTrWdAmt2 - #CalcTrWuAmt2)
+!
+------------------------------------
+!
+   calculate :  #SenTurboTest2        = TRIGGER("MinCredTest2")
+!
+   calculate :  #SenPct2              = BBAL("2AH")/COLL_PREV_BAL
+!
+   calculate :  #ShiftTest2           = TRIGGER("Delinquency2")
+!
+   calculate :  #SenPrep2             = IF ( #ShiftTest2 OR #SenTurboTest2 ) THEN 1 ELSE #SenPct2
+!
+   calculate :  "2AH" _
+ NO_CHECK  SCHEDULED  AMOUNT         LIMIT #SchedSNR2      = COLL_P_SCHED * #SenPct2, _
+ NO_CHECK  PREPAY     AMOUNT         LIMIT #PrepaySNR2     = COLL_P_PREPAY * #SenPrep2, _
+ NO_CHECK  RECOVER    AMOUNT         LIMIT #RecoverSNR2    = #Recoveries2, _
+ NO_CHECK  CUSTOM     AMOUNT         LIMIT #AddlBalRedSNR2 = #AddlBalRed2 * #SenPrep2
+!
+   calculate :  #SchedSUB2         = MAX( 0, COLL_P_SCHED - #SchedSNR2 )
+   calculate :  #PrepaySUB2        = MAX( 0, COLL_P_PREPAY - #PrepaySNR2 )
+   calculate :  #RecoverSUB2       = MAX( 0, #Recoveries2 - #RecoverSNR2 )
+   calculate :  #AddlBalRedSUB2    = MAX( 0, #AddlBalRed2 - #AddlBalRedSNR2 )
+!
+   calculate :  #SeniorAlloc2      = #SchedSNR2 + #PrepaySNR2 + #RecoverSNR2 + #AddlBalRedSNR2
+   calculate :  #SubAlloc2         = #SchedSUB2 + #PrepaySUB2 + #RecoverSUB2 + #AddlBalRedSUB2
+!
+ calculate:  "2SUB" _
+  NO_CHECK SCHEDULED      AMOUNT             = #SchedSUB2 , _
+  NO_CHECK PREPAY         AMOUNT             = #PrepaySUB2 , _
+  NO_CHECK RECOVER        AMOUNT             = #RecoverSUB2 , _
+  NO_CHECK CUSTOM         AMOUNT             = #AddlBalRedSUB2
+!
+------------------------------------
+{ DISTRIB_FROM_COLLECTION_TO_CLASSES ; }
+------------------------------------
+!
+------------------------------------
+        from :  CLASS ( "ROOT" )
+         pay :  NOWHERE ( NOLIMIT )
+------------------------------------
+   calculate :  #2AHIncrease          = MAX(0, #CalcTrWdAmt2 - #CreditEventAmt2)
+------------------------------------
+         pay :  CLASS INCREMENT( BALANCE "2AH", BY #2AHIncrease)
+         pay :  INCREMENT( BALANCE "2AH#1", BY #2AHIncrease)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_Pay_Grp2_Subs = #OptInt_2M1_2M1H + #OptInt_2M2A_2M2AH + #OptInt_2M2B_2M2BH + #OptInt_2M2C_2M2CH + #OptInt_2B1_2B1H + #OptInt_2B2H
+------------------------------------
+!
+------------------------------------  Pay Interest to 2AH From Cash Account
+        from :  NOWHERE ( #Int_Pay_Grp2_Subs )
+         pay :  CLASS INTEREST  PRO_RATA   ( "2SUB" )
+------------------------------------
+        from :  NOWHERE ( #OptInt_2AH )
+         pay :  CLASS INTEREST  PRO_RATA   ( "2AH" )
+------------------------------------
+!
+------------------------------------  Pay Interest to 2M1_2M1H From Cash Account
+        from :  CLASS ("2SUB")
+  subject to :  CEILING ( #OptInt_2M1_2M1H )
+         pay :  CLASS INTEREST  PRO_RATA   ( "2M1"; "2M1H" )
+------------------------------------
+!
+------------------------------------  Pay Interest to 2M2A_2M1AH From Cash Account
+        from :  CLASS ("2SUB")
+  subject to :  CEILING ( #OptInt_2M2A_2M2AH )
+         pay :  CLASS INTEREST  PRO_RATA   ( "2EA1"; "2AI1"; "2M2AH" )
+------------------------------------
+!
+------------------------------------  Pay Interest to 2M2B_2M2BH From Cash Account
+        from :  CLASS ("2SUB")
+  subject to :  CEILING ( #OptInt_2M2B_2M2BH )
+         pay :  CLASS INTEREST  PRO_RATA   ( "2EB1"; "2BI1"; "2M2BH" )
+------------------------------------
+!
+------------------------------------  Pay Interest to 2M2C_2M2CH From Cash Account
+        from :  CLASS ("2SUB")
+  subject to :  CEILING ( #OptInt_2M2C_2M2CH )
+         pay :  CLASS INTEREST  PRO_RATA   ( "2EC1"; "2CI1"; "2M2CH" )
+------------------------------------
+!
+------------------------------------  Pay Interest to 2B1_2B1H From Cash Account
+        from :  CLASS ("2SUB")
+  subject to :  CEILING ( #OptInt_2B1_2B1H )
+         pay :  CLASS INTEREST  PRO_RATA   ( "2B1"; "2B1H" )
+------------------------------------
+!
+------------------------------------  Pay Interest to 2B2H From Cash Account
+        from :  CLASS ("2SUB")
+  subject to :  CEILING ( #OptInt_2B2H )
+         pay :  CLASS INTEREST  PRO_RATA   ( "2B2H" )
+------------------------------------
+!
+------------------------------------
+   calculate :  #CumModIntLoss_2B2H = #CumModIntLoss_2B2H + #ModIntLoss_2B2H   
+   calculate :  #CumModIntLoss_2B1  = #CumModIntLoss_2B1  + #ModIntLoss_2B1   
+   calculate :  #CumModIntLoss_2M2C = #CumModIntLoss_2M2C + #ModIntLoss_2M2C   
+   calculate :  #CumModIntLoss_2M2B = #CumModIntLoss_2M2B + #ModIntLoss_2M2B   
+   calculate :  #CumModIntLoss_2M2A = #CumModIntLoss_2M2A + #ModIntLoss_2M2A   
+   calculate :  #CumModIntLoss_2M1  = #CumModIntLoss_2M1  + #ModIntLoss_2M1   
+   calculate :  #CumModIntLoss_2    = #CumModIntLoss_2B2H + #CumModIntLoss_2B1 + #CumModIntLoss_2M2C + #CumModIntLoss_2M2B + #CumModIntLoss_2M2A + #CumModIntLoss_2M1
+   calculate :  #ModIntPrinAdjust2  = #CumModIntLoss_2
+------------------------------------
+!
+------------------------------------
+        from :  CLASS ( "2SUB" )
+  subject to :  CEILING ( #ModIntPrinAdjust2 )
+         pay :  NOWHERE ( NOLIMIT )
+------------------------------------
+!
+------------------------------------  Pay Principal to 2AH From Cash Account
+        from :  NOWHERE ( #SeniorAlloc2 )
+         pay :  CLASS PRINCIPAL SEQUENTIAL ( "2AH" )
+------------------------------------  Pay Principal to 2SUB From Cash Account
+        from :  NOWHERE ( #SubAlloc2 )
+         pay :  CLASS PRINCIPAL SEQUENTIAL ( "2SUB" )
+------------------------------------
+        from :  CLASS ( "2SUB" )
+         pay :  CLASS BALANCE PRO_RATA ( "2M1"; "2M1H" )
+         pay :  CLASS BALANCE PRO_RATA ( "2EA1"; "2M2AH" )
+         pay :  CLASS BALANCE PRO_RATA ( "2EB1"; "2M2BH" )
+         pay :  CLASS BALANCE PRO_RATA ( "2EC1"; "2M2CH" )
+         pay :  CLASS BALANCE PRO_RATA ( "2B1"; "2B1H" )
+         pay :  CLASS BALANCE PRO_RATA ( "2B2H" )
+------------------------------------
+        from :  CLASS ( "2M1" )
+         pay :  SEQUENTIAL ( "2M1#1" )
+------------------------------------
+        from :  CLASS ( "2M1H" )
+         pay :  SEQUENTIAL ( "2M1H#1" )
+------------------------------------
+        from :  CLASS ( "2EA1" )
+         pay :  SEQUENTIAL ( "2EA1#1" )
+------------------------------------
+        from :  CLASS ( "2M2AH" )
+         pay :  SEQUENTIAL ( "2M2AH#1" )
+------------------------------------
+        from :  CLASS ( "2EB1" )
+         pay :  SEQUENTIAL ( "2EB1#1" )
+------------------------------------
+        from :  CLASS ( "2M2BH" )
+         pay :  SEQUENTIAL ( "2M2BH#1" )
+------------------------------------
+        from :  CLASS ( "2EC1" )
+         pay :  SEQUENTIAL ( "2EC1#1" )
+------------------------------------
+        from :  CLASS ( "2M2CH" )
+         pay :  SEQUENTIAL ( "2M2CH#1" )
+------------------------------------
+        from :  CLASS ( "2B1" )
+         pay :  SEQUENTIAL ( "2B1#1" )
+------------------------------------
+        from :  CLASS ( "2B1H" )
+         pay :  SEQUENTIAL ( "2B1H#1" )
+------------------------------------
+        from :  CLASS ( "2B2H" )
+         pay :  SEQUENTIAL ( "2B2H#1" )
+------------------------------------
+------------------------------------  Writedown Bonds
+   calculate :  #WriteDown2           = #CalcTrWdAmt2
+------------------------------------
+        from :  SUBACCOUNT ( #WriteDown2 )
+         pay :  WRITEDOWN PRO_RATA ( "2B2H#1" )
+------------------------------------
+        from :  SUBACCOUNT ( #WriteDown2 )
+         pay :  WRITEDOWN PRO_RATA ( "2B1#1"; "2B1H#1" )
+------------------------------------
+        from :  SUBACCOUNT ( #WriteDown2 )
+         pay :  WRITEDOWN PRO_RATA ( "2EC1#1"; "2M2CH#1" )
+------------------------------------
+        from :  SUBACCOUNT ( #WriteDown2 )
+         pay :  WRITEDOWN PRO_RATA ( "2EB1#1"; "2M2BH#1" )
+------------------------------------
+        from :  SUBACCOUNT ( #WriteDown2 )
+         pay :  WRITEDOWN PRO_RATA ( "2EA1#1"; "2M2AH#1" )
+------------------------------------
+        from :  SUBACCOUNT ( #WriteDown2 )
+         pay :  WRITEDOWN PRO_RATA ( "2M1#1"; "2M1H#1" )
+------------------------------------
+        from :  SUBACCOUNT ( #WriteDown2 )
+         pay :  WRITEDOWN SEQUENTIAL ( "2AH#1" )
+------------------------------------
+   calculate :  #WriteUp2             = #CalcTrWuAmt2
+------------------------------------
+        from :  SUBACCOUNT ( #WriteUp2 )
+         pay :  WRITEUP_PRINCSHORT_LOSS INCLUDING_PAIDDOWN SEQUENTIAL ( "2AH#1" )
+         pay :  WRITEUP_PRINCSHORT_LOSS INCLUDING_PAIDDOWN PRO_RATA ( "2M1#1"; "2M1H#1" )
+         pay :  WRITEUP_PRINCSHORT_LOSS INCLUDING_PAIDDOWN PRO_RATA ( "2EA1#1"; "2M2AH#1" )
+         pay :  WRITEUP_PRINCSHORT_LOSS INCLUDING_PAIDDOWN PRO_RATA ( "2EB1#1"; "2M2BH#1" )
+         pay :  WRITEUP_PRINCSHORT_LOSS INCLUDING_PAIDDOWN PRO_RATA ( "2EC1#1"; "2M2CH#1" )
+         pay :  WRITEUP_PRINCSHORT_LOSS INCLUDING_PAIDDOWN PRO_RATA ( "2B1#1"; "2B1H#1" )
+         pay :  WRITEUP_PRINCSHORT_LOSS INCLUDING_PAIDDOWN PRO_RATA ( "2B2H#1" )
+------------------------------------
+------------------------------------
+  { REFRESH_CLASS_TREE ; }
+!
+------------------------------------
+   calculate :  #CumCalcLosses2       = #CumCalcLosses2 + #CalcTrWdAmt2 - #CalcTrWuAmt2
+------------------------------------
+!
+------------------------------------
+------------------------------------
+   calculate :  #Int_2M2A = MIN(CAPPED_OPTIMAL_INTPMT("2EA1#1"), INTPMT("2EA1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2AI1#1"), INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2M2A )
+         pay :  COUPON ("2M2A")
+------------------------------------
+   calculate :  #AddInt_2M2A = MAX(0, INTPMT("2EA1#1") - CAPPED_OPTIMAL_INTPMT("2EA1#1")) + MAX(0, INTPMT("2AI1#1") - CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2M2A )
+         pay :  INTSHORT SEQUENTIAL ("2M2A")
+------------------------------------
+   calculate :  #ExcessInt_2M2A = MAX(0, INTPMT("2EA1#1")) + MAX(0, INTPMT("2AI1#1")) - INTPMT("2M2A")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2M2A )
+         pay :  AS_INTEREST ("2M2A")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA1#1")))
+         pay :  SEQUENTIAL ("2M2A#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2M2A#1") - (BBAL("2EA1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2M2A#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") - BBAL("2M2A#1"))
+------------------------------------
+         pay :  INCREMENT ("2M2A#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2M2B = MIN(CAPPED_OPTIMAL_INTPMT("2EB1#1"), INTPMT("2EB1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2BI1#1"), INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2M2B )
+         pay :  COUPON ("2M2B")
+------------------------------------
+   calculate :  #AddInt_2M2B = MAX(0, INTPMT("2EB1#1") - CAPPED_OPTIMAL_INTPMT("2EB1#1")) + MAX(0, INTPMT("2BI1#1") - CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2M2B )
+         pay :  INTSHORT SEQUENTIAL ("2M2B")
+------------------------------------
+   calculate :  #ExcessInt_2M2B = MAX(0, INTPMT("2EB1#1")) + MAX(0, INTPMT("2BI1#1")) - INTPMT("2M2B")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2M2B )
+         pay :  AS_INTEREST ("2M2B")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB1#1")))
+         pay :  SEQUENTIAL ("2M2B#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2M2B#1") - (BBAL("2EB1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2M2B#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") - BBAL("2M2B#1"))
+------------------------------------
+         pay :  INCREMENT ("2M2B#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2M2C = MIN(CAPPED_OPTIMAL_INTPMT("2EC1#1"), INTPMT("2EC1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2CI1#1"), INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2M2C )
+         pay :  COUPON ("2M2C")
+------------------------------------
+   calculate :  #AddInt_2M2C = MAX(0, INTPMT("2EC1#1") - CAPPED_OPTIMAL_INTPMT("2EC1#1")) + MAX(0, INTPMT("2CI1#1") - CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2M2C )
+         pay :  INTSHORT SEQUENTIAL ("2M2C")
+------------------------------------
+   calculate :  #ExcessInt_2M2C = MAX(0, INTPMT("2EC1#1")) + MAX(0, INTPMT("2CI1#1")) - INTPMT("2M2C")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2M2C )
+         pay :  AS_INTEREST ("2M2C")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EC1#1")))
+         pay :  SEQUENTIAL ("2M2C#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2M2C#1") - (BBAL("2EC1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2M2C#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EC1#1") - BBAL("2M2C#1"))
+------------------------------------
+         pay :  INCREMENT ("2M2C#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2M2 = MIN(CAPPED_OPTIMAL_INTPMT("2M2A#1"), INTPMT("2M2A#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2M2B#1"), INTPMT("2M2B#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2M2C#1"), INTPMT("2M2C#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2M2 )
+         pay :  COUPON ("2M2")
+------------------------------------
+   calculate :  #AddInt_2M2 = MAX(0, INTPMT("2M2A#1") - CAPPED_OPTIMAL_INTPMT("2M2A#1")) + MAX(0, INTPMT("2M2B#1") - CAPPED_OPTIMAL_INTPMT("2M2B#1")) + MAX(0, INTPMT("2M2C#1") - CAPPED_OPTIMAL_INTPMT("2M2C#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2M2 )
+         pay :  INTSHORT SEQUENTIAL ("2M2")
+------------------------------------
+   calculate :  #ExcessInt_2M2 = MAX(0, INTPMT("2M2A#1")) + MAX(0, INTPMT("2M2B#1")) + MAX(0, INTPMT("2M2C#1")) - INTPMT("2M2")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2M2 )
+         pay :  AS_INTEREST ("2M2")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2M2A#1") + PRINCPMT("2M2B#1") + PRINCPMT("2M2C#1")))
+         pay :  SEQUENTIAL ("2M2#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2M2#1") - (BBAL("2M2A#1") + BBAL("2M2B#1") + BBAL("2M2C#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2M2#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2M2A#1") + BBAL("2M2B#1") + BBAL("2M2C#1") - BBAL("2M2#1"))
+------------------------------------
+         pay :  INCREMENT ("2M2#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_MACRMM2AM2 = MIN(CAPPED_OPTIMAL_INTPMT("2EA1#1"), INTPMT("2EA1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2AI1#1"), INTPMT("2AI1#1"))
+------------------------------------
+   calculate :  #Int_2EA2 = #Int_MACRMM2AM2 * CAPPED_OPTIMAL_INTPMT("2EA2#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EA2 )
+         pay :  COUPON ("2EA2")
+------------------------------------
+   calculate :  #Int_2AI2 = #Int_MACRMM2AM2 * CAPPED_OPTIMAL_INTPMT("2AI2#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2AI2 )
+         pay :  COUPON ("2AI2")
+------------------------------------
+   calculate :  #AddInt_MACRMM2AM2 = MAX(0, INTPMT("2EA1#1") - CAPPED_OPTIMAL_INTPMT("2EA1#1")) + MAX(0, INTPMT("2AI1#1") - CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+   calculate :  #IntShort_2EA2 = #AddInt_MACRMM2AM2 * INTSHORT_ACCUM("2EA2#1") / (INTSHORT_ACCUM("2EA2#1") + INTSHORT_ACCUM("2AI2#1"))
+   calculate :  #IntShort_2AI2 = #AddInt_MACRMM2AM2 * INTSHORT_ACCUM("2AI2#1") / (INTSHORT_ACCUM("2EA2#1") + INTSHORT_ACCUM("2AI2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2EA2, #AddInt_MACRMM2AM2  )
+         pay :  INTSHORT SEQUENTIAL ("2EA2")
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2AI2, #AddInt_MACRMM2AM2  )
+         pay :  INTSHORT SEQUENTIAL ("2AI2")
+------------------------------------
+   calculate :  #ExcessInt_MACRMM2AM2 = MAX(0, INTPMT("2EA1#1")) + MAX(0, INTPMT("2AI1#1")) - INTPMT("2EA2") - INTPMT("2AI2")
+------------------------------------
+   calculate :  #ExcessInt_2EA2 = #ExcessInt_MACRMM2AM2 * CAPPED_OPTIMAL_INTPMT("2EA2#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EA2  )
+         pay :  AS_INTEREST ("2EA2")
+------------------------------------
+   calculate :  #ExcessInt_2AI2 = #ExcessInt_MACRMM2AM2 * CAPPED_OPTIMAL_INTPMT("2AI2#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2AI2  )
+         pay :  AS_INTEREST ("2AI2")
+------------------------------------
+   calculate :  #BBal_MACRMM2AM2 = MAX(0, #BBal_MACRMM2AM2 - (PRINCPMT("2EA1#1")))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2A-2") - #BBal_MACRMM2AM2
+   calculate :  #TotalBal = BBAL("2EA2")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EA2") / #TotalBal, BBAL("2EA2#1") )
+   calculate :  #BBal_2EA2 = BBAL("2EA2") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EA2")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2AI2") / #TotalBal, BBAL("2AI2#1") )
+   calculate :  #BBal_2AI2 = TBAL("2AI2") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EA2#1") - (BBAL("2EA1#1"))
+   calculate :  #BBal_MACRMM2AM2 = MAX(0,#BBal_MACRMM2AM2 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EA2#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") - BBAL("2EA2#1"))
+   calculate :  #BBal_MACRMM2AM2 = #BBal_MACRMM2AM2 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EA2#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_MACRMM2AM3 = MIN(CAPPED_OPTIMAL_INTPMT("2EA1#1"), INTPMT("2EA1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2AI1#1"), INTPMT("2AI1#1"))
+------------------------------------
+   calculate :  #Int_2EA3 = #Int_MACRMM2AM3 * CAPPED_OPTIMAL_INTPMT("2EA3#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EA3 )
+         pay :  COUPON ("2EA3")
+------------------------------------
+   calculate :  #Int_2AI3 = #Int_MACRMM2AM3 * CAPPED_OPTIMAL_INTPMT("2AI3#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2AI3 )
+         pay :  COUPON ("2AI3")
+------------------------------------
+   calculate :  #AddInt_MACRMM2AM3 = MAX(0, INTPMT("2EA1#1") - CAPPED_OPTIMAL_INTPMT("2EA1#1")) + MAX(0, INTPMT("2AI1#1") - CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+   calculate :  #IntShort_2EA3 = #AddInt_MACRMM2AM3 * INTSHORT_ACCUM("2EA3#1") / (INTSHORT_ACCUM("2EA3#1") + INTSHORT_ACCUM("2AI3#1"))
+   calculate :  #IntShort_2AI3 = #AddInt_MACRMM2AM3 * INTSHORT_ACCUM("2AI3#1") / (INTSHORT_ACCUM("2EA3#1") + INTSHORT_ACCUM("2AI3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2EA3, #AddInt_MACRMM2AM3  )
+         pay :  INTSHORT SEQUENTIAL ("2EA3")
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2AI3, #AddInt_MACRMM2AM3  )
+         pay :  INTSHORT SEQUENTIAL ("2AI3")
+------------------------------------
+   calculate :  #ExcessInt_MACRMM2AM3 = MAX(0, INTPMT("2EA1#1")) + MAX(0, INTPMT("2AI1#1")) - INTPMT("2EA3") - INTPMT("2AI3")
+------------------------------------
+   calculate :  #ExcessInt_2EA3 = #ExcessInt_MACRMM2AM3 * CAPPED_OPTIMAL_INTPMT("2EA3#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EA3  )
+         pay :  AS_INTEREST ("2EA3")
+------------------------------------
+   calculate :  #ExcessInt_2AI3 = #ExcessInt_MACRMM2AM3 * CAPPED_OPTIMAL_INTPMT("2AI3#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2AI3  )
+         pay :  AS_INTEREST ("2AI3")
+------------------------------------
+   calculate :  #BBal_MACRMM2AM3 = MAX(0, #BBal_MACRMM2AM3 - (PRINCPMT("2EA1#1")))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2A-3") - #BBal_MACRMM2AM3
+   calculate :  #TotalBal = BBAL("2EA3")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EA3") / #TotalBal, BBAL("2EA3#1") )
+   calculate :  #BBal_2EA3 = BBAL("2EA3") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EA3")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2AI3") / #TotalBal, BBAL("2AI3#1") )
+   calculate :  #BBal_2AI3 = TBAL("2AI3") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EA3#1") - (BBAL("2EA1#1"))
+   calculate :  #BBal_MACRMM2AM3 = MAX(0,#BBal_MACRMM2AM3 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EA3#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") - BBAL("2EA3#1"))
+   calculate :  #BBal_MACRMM2AM3 = #BBal_MACRMM2AM3 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EA3#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_MACRMM2AM4 = MIN(CAPPED_OPTIMAL_INTPMT("2EA1#1"), INTPMT("2EA1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2AI1#1"), INTPMT("2AI1#1"))
+------------------------------------
+   calculate :  #Int_2EA4 = #Int_MACRMM2AM4 * CAPPED_OPTIMAL_INTPMT("2EA4#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EA4 )
+         pay :  COUPON ("2EA4")
+------------------------------------
+   calculate :  #Int_2AI4 = #Int_MACRMM2AM4 * CAPPED_OPTIMAL_INTPMT("2AI4#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2AI4 )
+         pay :  COUPON ("2AI4")
+------------------------------------
+   calculate :  #AddInt_MACRMM2AM4 = MAX(0, INTPMT("2EA1#1") - CAPPED_OPTIMAL_INTPMT("2EA1#1")) + MAX(0, INTPMT("2AI1#1") - CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+   calculate :  #IntShort_2EA4 = #AddInt_MACRMM2AM4 * INTSHORT_ACCUM("2EA4#1") / (INTSHORT_ACCUM("2EA4#1") + INTSHORT_ACCUM("2AI4#1"))
+   calculate :  #IntShort_2AI4 = #AddInt_MACRMM2AM4 * INTSHORT_ACCUM("2AI4#1") / (INTSHORT_ACCUM("2EA4#1") + INTSHORT_ACCUM("2AI4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2EA4, #AddInt_MACRMM2AM4  )
+         pay :  INTSHORT SEQUENTIAL ("2EA4")
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2AI4, #AddInt_MACRMM2AM4  )
+         pay :  INTSHORT SEQUENTIAL ("2AI4")
+------------------------------------
+   calculate :  #ExcessInt_MACRMM2AM4 = MAX(0, INTPMT("2EA1#1")) + MAX(0, INTPMT("2AI1#1")) - INTPMT("2EA4") - INTPMT("2AI4")
+------------------------------------
+   calculate :  #ExcessInt_2EA4 = #ExcessInt_MACRMM2AM4 * CAPPED_OPTIMAL_INTPMT("2EA4#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EA4  )
+         pay :  AS_INTEREST ("2EA4")
+------------------------------------
+   calculate :  #ExcessInt_2AI4 = #ExcessInt_MACRMM2AM4 * CAPPED_OPTIMAL_INTPMT("2AI4#1") / (CAPPED_OPTIMAL_INTPMT("2EA1#1") + CAPPED_OPTIMAL_INTPMT("2AI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2AI4  )
+         pay :  AS_INTEREST ("2AI4")
+------------------------------------
+   calculate :  #BBal_MACRMM2AM4 = MAX(0, #BBal_MACRMM2AM4 - (PRINCPMT("2EA1#1")))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2A-4") - #BBal_MACRMM2AM4
+   calculate :  #TotalBal = BBAL("2EA4")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EA4") / #TotalBal, BBAL("2EA4#1") )
+   calculate :  #BBal_2EA4 = BBAL("2EA4") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EA4")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2AI4") / #TotalBal, BBAL("2AI4#1") )
+   calculate :  #BBal_2AI4 = TBAL("2AI4") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EA4#1") - (BBAL("2EA1#1"))
+   calculate :  #BBal_MACRMM2AM4 = MAX(0,#BBal_MACRMM2AM4 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EA4#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") - BBAL("2EA4#1"))
+   calculate :  #BBal_MACRMM2AM4 = #BBal_MACRMM2AM4 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EA4#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_MACRMM2BM2 = MIN(CAPPED_OPTIMAL_INTPMT("2EB1#1"), INTPMT("2EB1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2BI1#1"), INTPMT("2BI1#1"))
+------------------------------------
+   calculate :  #Int_2EB2 = #Int_MACRMM2BM2 * CAPPED_OPTIMAL_INTPMT("2EB2#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EB2 )
+         pay :  COUPON ("2EB2")
+------------------------------------
+   calculate :  #Int_2BI2 = #Int_MACRMM2BM2 * CAPPED_OPTIMAL_INTPMT("2BI2#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2BI2 )
+         pay :  COUPON ("2BI2")
+------------------------------------
+   calculate :  #AddInt_MACRMM2BM2 = MAX(0, INTPMT("2EB1#1") - CAPPED_OPTIMAL_INTPMT("2EB1#1")) + MAX(0, INTPMT("2BI1#1") - CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+   calculate :  #IntShort_2EB2 = #AddInt_MACRMM2BM2 * INTSHORT_ACCUM("2EB2#1") / (INTSHORT_ACCUM("2EB2#1") + INTSHORT_ACCUM("2BI2#1"))
+   calculate :  #IntShort_2BI2 = #AddInt_MACRMM2BM2 * INTSHORT_ACCUM("2BI2#1") / (INTSHORT_ACCUM("2EB2#1") + INTSHORT_ACCUM("2BI2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2EB2, #AddInt_MACRMM2BM2  )
+         pay :  INTSHORT SEQUENTIAL ("2EB2")
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2BI2, #AddInt_MACRMM2BM2  )
+         pay :  INTSHORT SEQUENTIAL ("2BI2")
+------------------------------------
+   calculate :  #ExcessInt_MACRMM2BM2 = MAX(0, INTPMT("2EB1#1")) + MAX(0, INTPMT("2BI1#1")) - INTPMT("2EB2") - INTPMT("2BI2")
+------------------------------------
+   calculate :  #ExcessInt_2EB2 = #ExcessInt_MACRMM2BM2 * CAPPED_OPTIMAL_INTPMT("2EB2#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EB2  )
+         pay :  AS_INTEREST ("2EB2")
+------------------------------------
+   calculate :  #ExcessInt_2BI2 = #ExcessInt_MACRMM2BM2 * CAPPED_OPTIMAL_INTPMT("2BI2#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2BI2  )
+         pay :  AS_INTEREST ("2BI2")
+------------------------------------
+   calculate :  #BBal_MACRMM2BM2 = MAX(0, #BBal_MACRMM2BM2 - (PRINCPMT("2EB1#1")))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2B-2") - #BBal_MACRMM2BM2
+   calculate :  #TotalBal = BBAL("2EB2")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EB2") / #TotalBal, BBAL("2EB2#1") )
+   calculate :  #BBal_2EB2 = BBAL("2EB2") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EB2")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2BI2") / #TotalBal, BBAL("2BI2#1") )
+   calculate :  #BBal_2BI2 = TBAL("2BI2") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EB2#1") - (BBAL("2EB1#1"))
+   calculate :  #BBal_MACRMM2BM2 = MAX(0,#BBal_MACRMM2BM2 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EB2#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") - BBAL("2EB2#1"))
+   calculate :  #BBal_MACRMM2BM2 = #BBal_MACRMM2BM2 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EB2#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_MACRMM2BM3 = MIN(CAPPED_OPTIMAL_INTPMT("2EB1#1"), INTPMT("2EB1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2BI1#1"), INTPMT("2BI1#1"))
+------------------------------------
+   calculate :  #Int_2EB3 = #Int_MACRMM2BM3 * CAPPED_OPTIMAL_INTPMT("2EB3#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EB3 )
+         pay :  COUPON ("2EB3")
+------------------------------------
+   calculate :  #Int_2BI3 = #Int_MACRMM2BM3 * CAPPED_OPTIMAL_INTPMT("2BI3#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2BI3 )
+         pay :  COUPON ("2BI3")
+------------------------------------
+   calculate :  #AddInt_MACRMM2BM3 = MAX(0, INTPMT("2EB1#1") - CAPPED_OPTIMAL_INTPMT("2EB1#1")) + MAX(0, INTPMT("2BI1#1") - CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+   calculate :  #IntShort_2EB3 = #AddInt_MACRMM2BM3 * INTSHORT_ACCUM("2EB3#1") / (INTSHORT_ACCUM("2EB3#1") + INTSHORT_ACCUM("2BI3#1"))
+   calculate :  #IntShort_2BI3 = #AddInt_MACRMM2BM3 * INTSHORT_ACCUM("2BI3#1") / (INTSHORT_ACCUM("2EB3#1") + INTSHORT_ACCUM("2BI3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2EB3, #AddInt_MACRMM2BM3  )
+         pay :  INTSHORT SEQUENTIAL ("2EB3")
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2BI3, #AddInt_MACRMM2BM3  )
+         pay :  INTSHORT SEQUENTIAL ("2BI3")
+------------------------------------
+   calculate :  #ExcessInt_MACRMM2BM3 = MAX(0, INTPMT("2EB1#1")) + MAX(0, INTPMT("2BI1#1")) - INTPMT("2EB3") - INTPMT("2BI3")
+------------------------------------
+   calculate :  #ExcessInt_2EB3 = #ExcessInt_MACRMM2BM3 * CAPPED_OPTIMAL_INTPMT("2EB3#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EB3  )
+         pay :  AS_INTEREST ("2EB3")
+------------------------------------
+   calculate :  #ExcessInt_2BI3 = #ExcessInt_MACRMM2BM3 * CAPPED_OPTIMAL_INTPMT("2BI3#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2BI3  )
+         pay :  AS_INTEREST ("2BI3")
+------------------------------------
+   calculate :  #BBal_MACRMM2BM3 = MAX(0, #BBal_MACRMM2BM3 - (PRINCPMT("2EB1#1")))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2B-3") - #BBal_MACRMM2BM3
+   calculate :  #TotalBal = BBAL("2EB3")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EB3") / #TotalBal, BBAL("2EB3#1") )
+   calculate :  #BBal_2EB3 = BBAL("2EB3") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EB3")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2BI3") / #TotalBal, BBAL("2BI3#1") )
+   calculate :  #BBal_2BI3 = TBAL("2BI3") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EB3#1") - (BBAL("2EB1#1"))
+   calculate :  #BBal_MACRMM2BM3 = MAX(0,#BBal_MACRMM2BM3 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EB3#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") - BBAL("2EB3#1"))
+   calculate :  #BBal_MACRMM2BM3 = #BBal_MACRMM2BM3 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EB3#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_MACRMM2BM4 = MIN(CAPPED_OPTIMAL_INTPMT("2EB1#1"), INTPMT("2EB1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2BI1#1"), INTPMT("2BI1#1"))
+------------------------------------
+   calculate :  #Int_2EB4 = #Int_MACRMM2BM4 * CAPPED_OPTIMAL_INTPMT("2EB4#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EB4 )
+         pay :  COUPON ("2EB4")
+------------------------------------
+   calculate :  #Int_2BI4 = #Int_MACRMM2BM4 * CAPPED_OPTIMAL_INTPMT("2BI4#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2BI4 )
+         pay :  COUPON ("2BI4")
+------------------------------------
+   calculate :  #AddInt_MACRMM2BM4 = MAX(0, INTPMT("2EB1#1") - CAPPED_OPTIMAL_INTPMT("2EB1#1")) + MAX(0, INTPMT("2BI1#1") - CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+   calculate :  #IntShort_2EB4 = #AddInt_MACRMM2BM4 * INTSHORT_ACCUM("2EB4#1") / (INTSHORT_ACCUM("2EB4#1") + INTSHORT_ACCUM("2BI4#1"))
+   calculate :  #IntShort_2BI4 = #AddInt_MACRMM2BM4 * INTSHORT_ACCUM("2BI4#1") / (INTSHORT_ACCUM("2EB4#1") + INTSHORT_ACCUM("2BI4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2EB4, #AddInt_MACRMM2BM4  )
+         pay :  INTSHORT SEQUENTIAL ("2EB4")
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2BI4, #AddInt_MACRMM2BM4  )
+         pay :  INTSHORT SEQUENTIAL ("2BI4")
+------------------------------------
+   calculate :  #ExcessInt_MACRMM2BM4 = MAX(0, INTPMT("2EB1#1")) + MAX(0, INTPMT("2BI1#1")) - INTPMT("2EB4") - INTPMT("2BI4")
+------------------------------------
+   calculate :  #ExcessInt_2EB4 = #ExcessInt_MACRMM2BM4 * CAPPED_OPTIMAL_INTPMT("2EB4#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EB4  )
+         pay :  AS_INTEREST ("2EB4")
+------------------------------------
+   calculate :  #ExcessInt_2BI4 = #ExcessInt_MACRMM2BM4 * CAPPED_OPTIMAL_INTPMT("2BI4#1") / (CAPPED_OPTIMAL_INTPMT("2EB1#1") + CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2BI4  )
+         pay :  AS_INTEREST ("2BI4")
+------------------------------------
+   calculate :  #BBal_MACRMM2BM4 = MAX(0, #BBal_MACRMM2BM4 - (PRINCPMT("2EB1#1")))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2B-4") - #BBal_MACRMM2BM4
+   calculate :  #TotalBal = BBAL("2EB4")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EB4") / #TotalBal, BBAL("2EB4#1") )
+   calculate :  #BBal_2EB4 = BBAL("2EB4") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EB4")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2BI4") / #TotalBal, BBAL("2BI4#1") )
+   calculate :  #BBal_2BI4 = TBAL("2BI4") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EB4#1") - (BBAL("2EB1#1"))
+   calculate :  #BBal_MACRMM2BM4 = MAX(0,#BBal_MACRMM2BM4 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EB4#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") - BBAL("2EB4#1"))
+   calculate :  #BBal_MACRMM2BM4 = #BBal_MACRMM2BM4 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EB4#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_MACRMM2CM2 = MIN(CAPPED_OPTIMAL_INTPMT("2EC1#1"), INTPMT("2EC1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2CI1#1"), INTPMT("2CI1#1"))
+------------------------------------
+   calculate :  #Int_2EC2 = #Int_MACRMM2CM2 * CAPPED_OPTIMAL_INTPMT("2EC2#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EC2 )
+         pay :  COUPON ("2EC2")
+------------------------------------
+   calculate :  #Int_2CI2 = #Int_MACRMM2CM2 * CAPPED_OPTIMAL_INTPMT("2CI2#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2CI2 )
+         pay :  COUPON ("2CI2")
+------------------------------------
+   calculate :  #AddInt_MACRMM2CM2 = MAX(0, INTPMT("2EC1#1") - CAPPED_OPTIMAL_INTPMT("2EC1#1")) + MAX(0, INTPMT("2CI1#1") - CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+   calculate :  #IntShort_2EC2 = #AddInt_MACRMM2CM2 * INTSHORT_ACCUM("2EC2#1") / (INTSHORT_ACCUM("2EC2#1") + INTSHORT_ACCUM("2CI2#1"))
+   calculate :  #IntShort_2CI2 = #AddInt_MACRMM2CM2 * INTSHORT_ACCUM("2CI2#1") / (INTSHORT_ACCUM("2EC2#1") + INTSHORT_ACCUM("2CI2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2EC2, #AddInt_MACRMM2CM2  )
+         pay :  INTSHORT SEQUENTIAL ("2EC2")
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2CI2, #AddInt_MACRMM2CM2  )
+         pay :  INTSHORT SEQUENTIAL ("2CI2")
+------------------------------------
+   calculate :  #ExcessInt_MACRMM2CM2 = MAX(0, INTPMT("2EC1#1")) + MAX(0, INTPMT("2CI1#1")) - INTPMT("2EC2") - INTPMT("2CI2")
+------------------------------------
+   calculate :  #ExcessInt_2EC2 = #ExcessInt_MACRMM2CM2 * CAPPED_OPTIMAL_INTPMT("2EC2#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EC2  )
+         pay :  AS_INTEREST ("2EC2")
+------------------------------------
+   calculate :  #ExcessInt_2CI2 = #ExcessInt_MACRMM2CM2 * CAPPED_OPTIMAL_INTPMT("2CI2#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2CI2  )
+         pay :  AS_INTEREST ("2CI2")
+------------------------------------
+   calculate :  #BBal_MACRMM2CM2 = MAX(0, #BBal_MACRMM2CM2 - (PRINCPMT("2EC1#1")))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2C-2") - #BBal_MACRMM2CM2
+   calculate :  #TotalBal = BBAL("2EC2")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EC2") / #TotalBal, BBAL("2EC2#1") )
+   calculate :  #BBal_2EC2 = BBAL("2EC2") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EC2")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2CI2") / #TotalBal, BBAL("2CI2#1") )
+   calculate :  #BBal_2CI2 = TBAL("2CI2") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EC2#1") - (BBAL("2EC1#1"))
+   calculate :  #BBal_MACRMM2CM2 = MAX(0,#BBal_MACRMM2CM2 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EC2#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EC1#1") - BBAL("2EC2#1"))
+   calculate :  #BBal_MACRMM2CM2 = #BBal_MACRMM2CM2 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EC2#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_MACRMM2CM3 = MIN(CAPPED_OPTIMAL_INTPMT("2EC1#1"), INTPMT("2EC1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2CI1#1"), INTPMT("2CI1#1"))
+------------------------------------
+   calculate :  #Int_2EC3 = #Int_MACRMM2CM3 * CAPPED_OPTIMAL_INTPMT("2EC3#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EC3 )
+         pay :  COUPON ("2EC3")
+------------------------------------
+   calculate :  #Int_2CI3 = #Int_MACRMM2CM3 * CAPPED_OPTIMAL_INTPMT("2CI3#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2CI3 )
+         pay :  COUPON ("2CI3")
+------------------------------------
+   calculate :  #AddInt_MACRMM2CM3 = MAX(0, INTPMT("2EC1#1") - CAPPED_OPTIMAL_INTPMT("2EC1#1")) + MAX(0, INTPMT("2CI1#1") - CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+   calculate :  #IntShort_2EC3 = #AddInt_MACRMM2CM3 * INTSHORT_ACCUM("2EC3#1") / (INTSHORT_ACCUM("2EC3#1") + INTSHORT_ACCUM("2CI3#1"))
+   calculate :  #IntShort_2CI3 = #AddInt_MACRMM2CM3 * INTSHORT_ACCUM("2CI3#1") / (INTSHORT_ACCUM("2EC3#1") + INTSHORT_ACCUM("2CI3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2EC3, #AddInt_MACRMM2CM3  )
+         pay :  INTSHORT SEQUENTIAL ("2EC3")
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2CI3, #AddInt_MACRMM2CM3  )
+         pay :  INTSHORT SEQUENTIAL ("2CI3")
+------------------------------------
+   calculate :  #ExcessInt_MACRMM2CM3 = MAX(0, INTPMT("2EC1#1")) + MAX(0, INTPMT("2CI1#1")) - INTPMT("2EC3") - INTPMT("2CI3")
+------------------------------------
+   calculate :  #ExcessInt_2EC3 = #ExcessInt_MACRMM2CM3 * CAPPED_OPTIMAL_INTPMT("2EC3#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EC3  )
+         pay :  AS_INTEREST ("2EC3")
+------------------------------------
+   calculate :  #ExcessInt_2CI3 = #ExcessInt_MACRMM2CM3 * CAPPED_OPTIMAL_INTPMT("2CI3#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2CI3  )
+         pay :  AS_INTEREST ("2CI3")
+------------------------------------
+   calculate :  #BBal_MACRMM2CM3 = MAX(0, #BBal_MACRMM2CM3 - (PRINCPMT("2EC1#1")))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2C-3") - #BBal_MACRMM2CM3
+   calculate :  #TotalBal = BBAL("2EC3")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EC3") / #TotalBal, BBAL("2EC3#1") )
+   calculate :  #BBal_2EC3 = BBAL("2EC3") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EC3")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2CI3") / #TotalBal, BBAL("2CI3#1") )
+   calculate :  #BBal_2CI3 = TBAL("2CI3") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EC3#1") - (BBAL("2EC1#1"))
+   calculate :  #BBal_MACRMM2CM3 = MAX(0,#BBal_MACRMM2CM3 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EC3#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EC1#1") - BBAL("2EC3#1"))
+   calculate :  #BBal_MACRMM2CM3 = #BBal_MACRMM2CM3 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EC3#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_MACRMM2CM4 = MIN(CAPPED_OPTIMAL_INTPMT("2EC1#1"), INTPMT("2EC1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2CI1#1"), INTPMT("2CI1#1"))
+------------------------------------
+   calculate :  #Int_2EC4 = #Int_MACRMM2CM4 * CAPPED_OPTIMAL_INTPMT("2EC4#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EC4 )
+         pay :  COUPON ("2EC4")
+------------------------------------
+   calculate :  #Int_2CI4 = #Int_MACRMM2CM4 * CAPPED_OPTIMAL_INTPMT("2CI4#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2CI4 )
+         pay :  COUPON ("2CI4")
+------------------------------------
+   calculate :  #AddInt_MACRMM2CM4 = MAX(0, INTPMT("2EC1#1") - CAPPED_OPTIMAL_INTPMT("2EC1#1")) + MAX(0, INTPMT("2CI1#1") - CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+   calculate :  #IntShort_2EC4 = #AddInt_MACRMM2CM4 * INTSHORT_ACCUM("2EC4#1") / (INTSHORT_ACCUM("2EC4#1") + INTSHORT_ACCUM("2CI4#1"))
+   calculate :  #IntShort_2CI4 = #AddInt_MACRMM2CM4 * INTSHORT_ACCUM("2CI4#1") / (INTSHORT_ACCUM("2EC4#1") + INTSHORT_ACCUM("2CI4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2EC4, #AddInt_MACRMM2CM4  )
+         pay :  INTSHORT SEQUENTIAL ("2EC4")
+------------------------------------
+  subject to :  SUBACCOUNT ( #IntShort_2CI4, #AddInt_MACRMM2CM4  )
+         pay :  INTSHORT SEQUENTIAL ("2CI4")
+------------------------------------
+   calculate :  #ExcessInt_MACRMM2CM4 = MAX(0, INTPMT("2EC1#1")) + MAX(0, INTPMT("2CI1#1")) - INTPMT("2EC4") - INTPMT("2CI4")
+------------------------------------
+   calculate :  #ExcessInt_2EC4 = #ExcessInt_MACRMM2CM4 * CAPPED_OPTIMAL_INTPMT("2EC4#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EC4  )
+         pay :  AS_INTEREST ("2EC4")
+------------------------------------
+   calculate :  #ExcessInt_2CI4 = #ExcessInt_MACRMM2CM4 * CAPPED_OPTIMAL_INTPMT("2CI4#1") / (CAPPED_OPTIMAL_INTPMT("2EC1#1") + CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2CI4  )
+         pay :  AS_INTEREST ("2CI4")
+------------------------------------
+   calculate :  #BBal_MACRMM2CM4 = MAX(0, #BBal_MACRMM2CM4 - (PRINCPMT("2EC1#1")))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2C-4") - #BBal_MACRMM2CM4
+   calculate :  #TotalBal = BBAL("2EC4")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EC4") / #TotalBal, BBAL("2EC4#1") )
+   calculate :  #BBal_2EC4 = BBAL("2EC4") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EC4")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2CI4") / #TotalBal, BBAL("2CI4#1") )
+   calculate :  #BBal_2CI4 = TBAL("2CI4") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EC4#1") - (BBAL("2EC1#1"))
+   calculate :  #BBal_MACRMM2CM4 = MAX(0,#BBal_MACRMM2CM4 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EC4#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EC1#1") - BBAL("2EC4#1"))
+   calculate :  #BBal_MACRMM2CM4 = #BBal_MACRMM2CM4 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EC4#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2ED1 = MIN(CAPPED_OPTIMAL_INTPMT("2EA1#1"), INTPMT("2EA1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2EB1#1"), INTPMT("2EB1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2ED1 )
+         pay :  COUPON ("2ED1")
+------------------------------------
+   calculate :  #AddInt_2ED1 = MAX(0, INTPMT("2EA1#1") - CAPPED_OPTIMAL_INTPMT("2EA1#1")) + MAX(0, INTPMT("2EB1#1") - CAPPED_OPTIMAL_INTPMT("2EB1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2ED1 )
+         pay :  INTSHORT SEQUENTIAL ("2ED1")
+------------------------------------
+   calculate :  #ExcessInt_2ED1 = MAX(0, INTPMT("2EA1#1")) + MAX(0, INTPMT("2EB1#1")) - INTPMT("2ED1")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2ED1 )
+         pay :  AS_INTEREST ("2ED1")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA1#1") + PRINCPMT("2EB1#1")))
+         pay :  SEQUENTIAL ("2ED1#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED1#1") - (BBAL("2EA1#1") + BBAL("2EB1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED1#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") + BBAL("2EB1#1") - BBAL("2ED1#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED1#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2ED2 = MIN(CAPPED_OPTIMAL_INTPMT("2EA2#1"), INTPMT("2EA2#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2EB2#1"), INTPMT("2EB2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2ED2 )
+         pay :  COUPON ("2ED2")
+------------------------------------
+   calculate :  #AddInt_2ED2 = MAX(0, INTPMT("2EA2#1") - CAPPED_OPTIMAL_INTPMT("2EA2#1")) + MAX(0, INTPMT("2EB2#1") - CAPPED_OPTIMAL_INTPMT("2EB2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2ED2 )
+         pay :  INTSHORT SEQUENTIAL ("2ED2")
+------------------------------------
+   calculate :  #ExcessInt_2ED2 = MAX(0, INTPMT("2EA2#1")) + MAX(0, INTPMT("2EB2#1")) - INTPMT("2ED2")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2ED2 )
+         pay :  AS_INTEREST ("2ED2")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA2#1") + PRINCPMT("2EB2#1")))
+         pay :  SEQUENTIAL ("2ED2#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED2#1") - (BBAL("2EA2#1") + BBAL("2EB2#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED2#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA2#1") + BBAL("2EB2#1") - BBAL("2ED2#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED2#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2ED3 = MIN(CAPPED_OPTIMAL_INTPMT("2EA3#1"), INTPMT("2EA3#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2EB3#1"), INTPMT("2EB3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2ED3 )
+         pay :  COUPON ("2ED3")
+------------------------------------
+   calculate :  #AddInt_2ED3 = MAX(0, INTPMT("2EA3#1") - CAPPED_OPTIMAL_INTPMT("2EA3#1")) + MAX(0, INTPMT("2EB3#1") - CAPPED_OPTIMAL_INTPMT("2EB3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2ED3 )
+         pay :  INTSHORT SEQUENTIAL ("2ED3")
+------------------------------------
+   calculate :  #ExcessInt_2ED3 = MAX(0, INTPMT("2EA3#1")) + MAX(0, INTPMT("2EB3#1")) - INTPMT("2ED3")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2ED3 )
+         pay :  AS_INTEREST ("2ED3")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA3#1") + PRINCPMT("2EB3#1")))
+         pay :  SEQUENTIAL ("2ED3#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED3#1") - (BBAL("2EA3#1") + BBAL("2EB3#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED3#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA3#1") + BBAL("2EB3#1") - BBAL("2ED3#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED3#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2ED4 = MIN(CAPPED_OPTIMAL_INTPMT("2EA4#1"), INTPMT("2EA4#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2EB4#1"), INTPMT("2EB4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2ED4 )
+         pay :  COUPON ("2ED4")
+------------------------------------
+   calculate :  #AddInt_2ED4 = MAX(0, INTPMT("2EA4#1") - CAPPED_OPTIMAL_INTPMT("2EA4#1")) + MAX(0, INTPMT("2EB4#1") - CAPPED_OPTIMAL_INTPMT("2EB4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2ED4 )
+         pay :  INTSHORT SEQUENTIAL ("2ED4")
+------------------------------------
+   calculate :  #ExcessInt_2ED4 = MAX(0, INTPMT("2EA4#1")) + MAX(0, INTPMT("2EB4#1")) - INTPMT("2ED4")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2ED4 )
+         pay :  AS_INTEREST ("2ED4")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA4#1") + PRINCPMT("2EB4#1")))
+         pay :  SEQUENTIAL ("2ED4#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED4#1") - (BBAL("2EA4#1") + BBAL("2EB4#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED4#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA4#1") + BBAL("2EB4#1") - BBAL("2ED4#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED4#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2ED5 = MIN(CAPPED_OPTIMAL_INTPMT("2M2A#1"), INTPMT("2M2A#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2M2B#1"), INTPMT("2M2B#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2ED5 )
+         pay :  COUPON ("2ED5")
+------------------------------------
+   calculate :  #AddInt_2ED5 = MAX(0, INTPMT("2M2A#1") - CAPPED_OPTIMAL_INTPMT("2M2A#1")) + MAX(0, INTPMT("2M2B#1") - CAPPED_OPTIMAL_INTPMT("2M2B#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2ED5 )
+         pay :  INTSHORT SEQUENTIAL ("2ED5")
+------------------------------------
+   calculate :  #ExcessInt_2ED5 = MAX(0, INTPMT("2M2A#1")) + MAX(0, INTPMT("2M2B#1")) - INTPMT("2ED5")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2ED5 )
+         pay :  AS_INTEREST ("2ED5")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2M2A#1") + PRINCPMT("2M2B#1")))
+         pay :  SEQUENTIAL ("2ED5#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED5#1") - (BBAL("2M2A#1") + BBAL("2M2B#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED5#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2M2A#1") + BBAL("2M2B#1") - BBAL("2ED5#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED5#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2EF1 = MIN(CAPPED_OPTIMAL_INTPMT("2EB1#1"), INTPMT("2EB1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2EC1#1"), INTPMT("2EC1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EF1 )
+         pay :  COUPON ("2EF1")
+------------------------------------
+   calculate :  #AddInt_2EF1 = MAX(0, INTPMT("2EB1#1") - CAPPED_OPTIMAL_INTPMT("2EB1#1")) + MAX(0, INTPMT("2EC1#1") - CAPPED_OPTIMAL_INTPMT("2EC1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2EF1 )
+         pay :  INTSHORT SEQUENTIAL ("2EF1")
+------------------------------------
+   calculate :  #ExcessInt_2EF1 = MAX(0, INTPMT("2EB1#1")) + MAX(0, INTPMT("2EC1#1")) - INTPMT("2EF1")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EF1 )
+         pay :  AS_INTEREST ("2EF1")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB1#1") + PRINCPMT("2EC1#1")))
+         pay :  SEQUENTIAL ("2EF1#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF1#1") - (BBAL("2EB1#1") + BBAL("2EC1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF1#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") + BBAL("2EC1#1") - BBAL("2EF1#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF1#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2EF2 = MIN(CAPPED_OPTIMAL_INTPMT("2EB2#1"), INTPMT("2EB2#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2EC2#1"), INTPMT("2EC2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EF2 )
+         pay :  COUPON ("2EF2")
+------------------------------------
+   calculate :  #AddInt_2EF2 = MAX(0, INTPMT("2EB2#1") - CAPPED_OPTIMAL_INTPMT("2EB2#1")) + MAX(0, INTPMT("2EC2#1") - CAPPED_OPTIMAL_INTPMT("2EC2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2EF2 )
+         pay :  INTSHORT SEQUENTIAL ("2EF2")
+------------------------------------
+   calculate :  #ExcessInt_2EF2 = MAX(0, INTPMT("2EB2#1")) + MAX(0, INTPMT("2EC2#1")) - INTPMT("2EF2")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EF2 )
+         pay :  AS_INTEREST ("2EF2")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB2#1") + PRINCPMT("2EC2#1")))
+         pay :  SEQUENTIAL ("2EF2#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF2#1") - (BBAL("2EB2#1") + BBAL("2EC2#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF2#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB2#1") + BBAL("2EC2#1") - BBAL("2EF2#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF2#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2EF3 = MIN(CAPPED_OPTIMAL_INTPMT("2EB3#1"), INTPMT("2EB3#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2EC3#1"), INTPMT("2EC3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EF3 )
+         pay :  COUPON ("2EF3")
+------------------------------------
+   calculate :  #AddInt_2EF3 = MAX(0, INTPMT("2EB3#1") - CAPPED_OPTIMAL_INTPMT("2EB3#1")) + MAX(0, INTPMT("2EC3#1") - CAPPED_OPTIMAL_INTPMT("2EC3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2EF3 )
+         pay :  INTSHORT SEQUENTIAL ("2EF3")
+------------------------------------
+   calculate :  #ExcessInt_2EF3 = MAX(0, INTPMT("2EB3#1")) + MAX(0, INTPMT("2EC3#1")) - INTPMT("2EF3")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EF3 )
+         pay :  AS_INTEREST ("2EF3")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB3#1") + PRINCPMT("2EC3#1")))
+         pay :  SEQUENTIAL ("2EF3#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF3#1") - (BBAL("2EB3#1") + BBAL("2EC3#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF3#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB3#1") + BBAL("2EC3#1") - BBAL("2EF3#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF3#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2EF4 = MIN(CAPPED_OPTIMAL_INTPMT("2EB4#1"), INTPMT("2EB4#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2EC4#1"), INTPMT("2EC4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EF4 )
+         pay :  COUPON ("2EF4")
+------------------------------------
+   calculate :  #AddInt_2EF4 = MAX(0, INTPMT("2EB4#1") - CAPPED_OPTIMAL_INTPMT("2EB4#1")) + MAX(0, INTPMT("2EC4#1") - CAPPED_OPTIMAL_INTPMT("2EC4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2EF4 )
+         pay :  INTSHORT SEQUENTIAL ("2EF4")
+------------------------------------
+   calculate :  #ExcessInt_2EF4 = MAX(0, INTPMT("2EB4#1")) + MAX(0, INTPMT("2EC4#1")) - INTPMT("2EF4")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EF4 )
+         pay :  AS_INTEREST ("2EF4")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB4#1") + PRINCPMT("2EC4#1")))
+         pay :  SEQUENTIAL ("2EF4#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF4#1") - (BBAL("2EB4#1") + BBAL("2EC4#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF4#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB4#1") + BBAL("2EC4#1") - BBAL("2EF4#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF4#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2EF5 = MIN(CAPPED_OPTIMAL_INTPMT("2M2B#1"), INTPMT("2M2B#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2M2C#1"), INTPMT("2M2C#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2EF5 )
+         pay :  COUPON ("2EF5")
+------------------------------------
+   calculate :  #AddInt_2EF5 = MAX(0, INTPMT("2M2B#1") - CAPPED_OPTIMAL_INTPMT("2M2B#1")) + MAX(0, INTPMT("2M2C#1") - CAPPED_OPTIMAL_INTPMT("2M2C#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2EF5 )
+         pay :  INTSHORT SEQUENTIAL ("2EF5")
+------------------------------------
+   calculate :  #ExcessInt_2EF5 = MAX(0, INTPMT("2M2B#1")) + MAX(0, INTPMT("2M2C#1")) - INTPMT("2EF5")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2EF5 )
+         pay :  AS_INTEREST ("2EF5")
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2M2B#1") + PRINCPMT("2M2C#1")))
+         pay :  SEQUENTIAL ("2EF5#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF5#1") - (BBAL("2M2B#1") + BBAL("2M2C#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF5#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2M2B#1") + BBAL("2M2C#1") - BBAL("2EF5#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF5#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2X1 = MIN(CAPPED_OPTIMAL_INTPMT("2AI1#1"), INTPMT("2AI1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2BI1#1"), INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2X1 )
+         pay :  COUPON ("2X1")
+------------------------------------
+   calculate :  #AddInt_2X1 = MAX(0, INTPMT("2AI1#1") - CAPPED_OPTIMAL_INTPMT("2AI1#1")) + MAX(0, INTPMT("2BI1#1") - CAPPED_OPTIMAL_INTPMT("2BI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2X1 )
+         pay :  INTSHORT SEQUENTIAL ("2X1")
+------------------------------------
+   calculate :  #ExcessInt_2X1 = MAX(0, INTPMT("2AI1#1")) + MAX(0, INTPMT("2BI1#1")) - INTPMT("2X1")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2X1 )
+         pay :  AS_INTEREST ("2X1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2X2 = MIN(CAPPED_OPTIMAL_INTPMT("2AI2#1"), INTPMT("2AI2#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2BI2#1"), INTPMT("2BI2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2X2 )
+         pay :  COUPON ("2X2")
+------------------------------------
+   calculate :  #AddInt_2X2 = MAX(0, INTPMT("2AI2#1") - CAPPED_OPTIMAL_INTPMT("2AI2#1")) + MAX(0, INTPMT("2BI2#1") - CAPPED_OPTIMAL_INTPMT("2BI2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2X2 )
+         pay :  INTSHORT SEQUENTIAL ("2X2")
+------------------------------------
+   calculate :  #ExcessInt_2X2 = MAX(0, INTPMT("2AI2#1")) + MAX(0, INTPMT("2BI2#1")) - INTPMT("2X2")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2X2 )
+         pay :  AS_INTEREST ("2X2")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2X3 = MIN(CAPPED_OPTIMAL_INTPMT("2AI3#1"), INTPMT("2AI3#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2BI3#1"), INTPMT("2BI3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2X3 )
+         pay :  COUPON ("2X3")
+------------------------------------
+   calculate :  #AddInt_2X3 = MAX(0, INTPMT("2AI3#1") - CAPPED_OPTIMAL_INTPMT("2AI3#1")) + MAX(0, INTPMT("2BI3#1") - CAPPED_OPTIMAL_INTPMT("2BI3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2X3 )
+         pay :  INTSHORT SEQUENTIAL ("2X3")
+------------------------------------
+   calculate :  #ExcessInt_2X3 = MAX(0, INTPMT("2AI3#1")) + MAX(0, INTPMT("2BI3#1")) - INTPMT("2X3")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2X3 )
+         pay :  AS_INTEREST ("2X3")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2X4 = MIN(CAPPED_OPTIMAL_INTPMT("2AI4#1"), INTPMT("2AI4#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2BI4#1"), INTPMT("2BI4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2X4 )
+         pay :  COUPON ("2X4")
+------------------------------------
+   calculate :  #AddInt_2X4 = MAX(0, INTPMT("2AI4#1") - CAPPED_OPTIMAL_INTPMT("2AI4#1")) + MAX(0, INTPMT("2BI4#1") - CAPPED_OPTIMAL_INTPMT("2BI4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2X4 )
+         pay :  INTSHORT SEQUENTIAL ("2X4")
+------------------------------------
+   calculate :  #ExcessInt_2X4 = MAX(0, INTPMT("2AI4#1")) + MAX(0, INTPMT("2BI4#1")) - INTPMT("2X4")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2X4 )
+         pay :  AS_INTEREST ("2X4")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2Y1 = MIN(CAPPED_OPTIMAL_INTPMT("2BI1#1"), INTPMT("2BI1#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2CI1#1"), INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2Y1 )
+         pay :  COUPON ("2Y1")
+------------------------------------
+   calculate :  #AddInt_2Y1 = MAX(0, INTPMT("2BI1#1") - CAPPED_OPTIMAL_INTPMT("2BI1#1")) + MAX(0, INTPMT("2CI1#1") - CAPPED_OPTIMAL_INTPMT("2CI1#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2Y1 )
+         pay :  INTSHORT SEQUENTIAL ("2Y1")
+------------------------------------
+   calculate :  #ExcessInt_2Y1 = MAX(0, INTPMT("2BI1#1")) + MAX(0, INTPMT("2CI1#1")) - INTPMT("2Y1")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2Y1 )
+         pay :  AS_INTEREST ("2Y1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2Y2 = MIN(CAPPED_OPTIMAL_INTPMT("2BI2#1"), INTPMT("2BI2#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2CI2#1"), INTPMT("2CI2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2Y2 )
+         pay :  COUPON ("2Y2")
+------------------------------------
+   calculate :  #AddInt_2Y2 = MAX(0, INTPMT("2BI2#1") - CAPPED_OPTIMAL_INTPMT("2BI2#1")) + MAX(0, INTPMT("2CI2#1") - CAPPED_OPTIMAL_INTPMT("2CI2#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2Y2 )
+         pay :  INTSHORT SEQUENTIAL ("2Y2")
+------------------------------------
+   calculate :  #ExcessInt_2Y2 = MAX(0, INTPMT("2BI2#1")) + MAX(0, INTPMT("2CI2#1")) - INTPMT("2Y2")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2Y2 )
+         pay :  AS_INTEREST ("2Y2")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2Y3 = MIN(CAPPED_OPTIMAL_INTPMT("2BI3#1"), INTPMT("2BI3#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2CI3#1"), INTPMT("2CI3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2Y3 )
+         pay :  COUPON ("2Y3")
+------------------------------------
+   calculate :  #AddInt_2Y3 = MAX(0, INTPMT("2BI3#1") - CAPPED_OPTIMAL_INTPMT("2BI3#1")) + MAX(0, INTPMT("2CI3#1") - CAPPED_OPTIMAL_INTPMT("2CI3#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2Y3 )
+         pay :  INTSHORT SEQUENTIAL ("2Y3")
+------------------------------------
+   calculate :  #ExcessInt_2Y3 = MAX(0, INTPMT("2BI3#1")) + MAX(0, INTPMT("2CI3#1")) - INTPMT("2Y3")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2Y3 )
+         pay :  AS_INTEREST ("2Y3")
+------------------------------------
+!
+------------------------------------
+   calculate :  #Int_2Y4 = MIN(CAPPED_OPTIMAL_INTPMT("2BI4#1"), INTPMT("2BI4#1")) + MIN(CAPPED_OPTIMAL_INTPMT("2CI4#1"), INTPMT("2CI4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #Int_2Y4 )
+         pay :  COUPON ("2Y4")
+------------------------------------
+   calculate :  #AddInt_2Y4 = MAX(0, INTPMT("2BI4#1") - CAPPED_OPTIMAL_INTPMT("2BI4#1")) + MAX(0, INTPMT("2CI4#1") - CAPPED_OPTIMAL_INTPMT("2CI4#1"))
+------------------------------------
+  subject to :  SUBACCOUNT ( #AddInt_2Y4 )
+         pay :  INTSHORT SEQUENTIAL ("2Y4")
+------------------------------------
+   calculate :  #ExcessInt_2Y4 = MAX(0, INTPMT("2BI4#1")) + MAX(0, INTPMT("2CI4#1")) - INTPMT("2Y4")
+------------------------------------
+  subject to :  SUBACCOUNT ( #ExcessInt_2Y4 )
+         pay :  AS_INTEREST ("2Y4")
+------------------------------------
+!
+------------------------------------
+------------------------------------
+   calculate : #ResidCash   = CASH_ACCOUNT("ROOT")
+------------------------------------
+------------------------------------
+ calculate: #CallBalDeal = COLL_BAL
+------------------------------------
+---------------------- SECTION: "OPTR_DEAL"
+   calculate :  #RegPrinc_2EA1       = PRINCPMT("2EA1#1")
+   calculate :  #RegPrinc_2AI1       = PRINCPMT("2AI1#1")
+   calculate :  #RegPrinc_2EB1       = PRINCPMT("2EB1#1")
+   calculate :  #RegPrinc_2BI1       = PRINCPMT("2BI1#1")
+   calculate :  #RegPrinc_2EC1       = PRINCPMT("2EC1#1")
+   calculate :  #RegPrinc_2CI1       = PRINCPMT("2CI1#1")
+   calculate :  #RegPrinc_2M2A       = PRINCPMT("2M2A#1")
+   calculate :  #RegPrinc_2M2B       = PRINCPMT("2M2B#1")
+   calculate :  #RegPrinc_2M2C       = PRINCPMT("2M2C#1")
+   calculate :  #RegPrinc_2EA2       = PRINCPMT("2EA2#1")
+   calculate :  #RegPrinc_2EB2       = PRINCPMT("2EB2#1")
+   calculate :  #RegPrinc_2EA3       = PRINCPMT("2EA3#1")
+   calculate :  #RegPrinc_2EB3       = PRINCPMT("2EB3#1")
+   calculate :  #RegPrinc_2EA4       = PRINCPMT("2EA4#1")
+   calculate :  #RegPrinc_2EB4       = PRINCPMT("2EB4#1")
+   calculate :  #RegPrinc_2EC2       = PRINCPMT("2EC2#1")
+   calculate :  #RegPrinc_2EC3       = PRINCPMT("2EC3#1")
+   calculate :  #RegPrinc_2EC4       = PRINCPMT("2EC4#1")
+   calculate :  #RegPrinc_2AI2       = PRINCPMT("2AI2#1")
+   calculate :  #RegPrinc_2BI2       = PRINCPMT("2BI2#1")
+   calculate :  #RegPrinc_2AI3       = PRINCPMT("2AI3#1")
+   calculate :  #RegPrinc_2BI3       = PRINCPMT("2BI3#1")
+   calculate :  #RegPrinc_2AI4       = PRINCPMT("2AI4#1")
+   calculate :  #RegPrinc_2BI4       = PRINCPMT("2BI4#1")
+   calculate :  #RegPrinc_2CI2       = PRINCPMT("2CI2#1")
+   calculate :  #RegPrinc_2CI3       = PRINCPMT("2CI3#1")
+   calculate :  #RegPrinc_2CI4       = PRINCPMT("2CI4#1")
+------------------------------------
+        from :  CASH_ACCOUNT (100)
+  subject to :  CEILING ( #CallBalDeal)
+         pay :  CLASS BALANCE SEQUENTIAL ( "ROOT" )
+         pay :  CLASS MORE_INTEREST SEQUENTIAL ( "ROOT" )
+------------------------------------
+        from :  CLASS ( "ROOT" )
+         pay :  PRO_RATA ( "2AH#1" )
+------------------------------------
+        from :  CLASS ( "ROOT" )
+         pay :  PRO_RATA ( "2M1#1"; "2M1H#1"; "2EA1#1"; "2M2AH#1"; "2EB1#1"; "2M2BH#1"; "2EC1#1"; "2M2CH#1"; "2B1#1"; "2B1H#1"; "2B2H#1" )
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA1#1") - #RegPrinc_2EA1))
+         pay :  SEQUENTIAL ("2M2A#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2M2A#1") - (BBAL("2EA1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2M2A#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") - BBAL("2M2A#1"))
+------------------------------------
+         pay :  INCREMENT ("2M2A#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB1#1") - #RegPrinc_2EB1))
+         pay :  SEQUENTIAL ("2M2B#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2M2B#1") - (BBAL("2EB1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2M2B#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") - BBAL("2M2B#1"))
+------------------------------------
+         pay :  INCREMENT ("2M2B#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EC1#1") - #RegPrinc_2EC1))
+         pay :  SEQUENTIAL ("2M2C#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2M2C#1") - (BBAL("2EC1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2M2C#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EC1#1") - BBAL("2M2C#1"))
+------------------------------------
+         pay :  INCREMENT ("2M2C#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2M2A#1") - #RegPrinc_2M2A + PRINCPMT("2M2B#1") - #RegPrinc_2M2B + PRINCPMT("2M2C#1") - #RegPrinc_2M2C))
+         pay :  SEQUENTIAL ("2M2#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2M2#1") - (BBAL("2M2A#1") + BBAL("2M2B#1") + BBAL("2M2C#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2M2#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2M2A#1") + BBAL("2M2B#1") + BBAL("2M2C#1") - BBAL("2M2#1"))
+------------------------------------
+         pay :  INCREMENT ("2M2#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+   calculate :  #BBal_MACRMM2AM2 = MAX(0, #BBal_MACRMM2AM2 - (PRINCPMT("2EA1#1") - #RegPrinc_2EA1))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2A-2") - #BBal_MACRMM2AM2
+   calculate :  #TotalBal = BBAL("2EA2")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EA2") / #TotalBal, BBAL("2EA2#1") )
+   calculate :  #BBal_2EA2 = BBAL("2EA2") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EA2")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2AI2") / #TotalBal, BBAL("2AI2#1") )
+   calculate :  #BBal_2AI2 = TBAL("2AI2") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EA2#1") - (BBAL("2EA1#1"))
+   calculate :  #BBal_MACRMM2AM2 = MAX(0,#BBal_MACRMM2AM2 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EA2#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") - BBAL("2EA2#1"))
+   calculate :  #BBal_MACRMM2AM2 = #BBal_MACRMM2AM2 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EA2#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #BBal_MACRMM2AM3 = MAX(0, #BBal_MACRMM2AM3 - (PRINCPMT("2EA1#1") - #RegPrinc_2EA1))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2A-3") - #BBal_MACRMM2AM3
+   calculate :  #TotalBal = BBAL("2EA3")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EA3") / #TotalBal, BBAL("2EA3#1") )
+   calculate :  #BBal_2EA3 = BBAL("2EA3") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EA3")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2AI3") / #TotalBal, BBAL("2AI3#1") )
+   calculate :  #BBal_2AI3 = TBAL("2AI3") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EA3#1") - (BBAL("2EA1#1"))
+   calculate :  #BBal_MACRMM2AM3 = MAX(0,#BBal_MACRMM2AM3 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EA3#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") - BBAL("2EA3#1"))
+   calculate :  #BBal_MACRMM2AM3 = #BBal_MACRMM2AM3 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EA3#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #BBal_MACRMM2AM4 = MAX(0, #BBal_MACRMM2AM4 - (PRINCPMT("2EA1#1") - #RegPrinc_2EA1))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2A-4") - #BBal_MACRMM2AM4
+   calculate :  #TotalBal = BBAL("2EA4")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EA4") / #TotalBal, BBAL("2EA4#1") )
+   calculate :  #BBal_2EA4 = BBAL("2EA4") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EA4")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2AI4") / #TotalBal, BBAL("2AI4#1") )
+   calculate :  #BBal_2AI4 = TBAL("2AI4") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EA4#1") - (BBAL("2EA1#1"))
+   calculate :  #BBal_MACRMM2AM4 = MAX(0,#BBal_MACRMM2AM4 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EA4#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") - BBAL("2EA4#1"))
+   calculate :  #BBal_MACRMM2AM4 = #BBal_MACRMM2AM4 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EA4#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #BBal_MACRMM2BM2 = MAX(0, #BBal_MACRMM2BM2 - (PRINCPMT("2EB1#1") - #RegPrinc_2EB1))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2B-2") - #BBal_MACRMM2BM2
+   calculate :  #TotalBal = BBAL("2EB2")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EB2") / #TotalBal, BBAL("2EB2#1") )
+   calculate :  #BBal_2EB2 = BBAL("2EB2") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EB2")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2BI2") / #TotalBal, BBAL("2BI2#1") )
+   calculate :  #BBal_2BI2 = TBAL("2BI2") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EB2#1") - (BBAL("2EB1#1"))
+   calculate :  #BBal_MACRMM2BM2 = MAX(0,#BBal_MACRMM2BM2 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EB2#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") - BBAL("2EB2#1"))
+   calculate :  #BBal_MACRMM2BM2 = #BBal_MACRMM2BM2 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EB2#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #BBal_MACRMM2BM3 = MAX(0, #BBal_MACRMM2BM3 - (PRINCPMT("2EB1#1") - #RegPrinc_2EB1))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2B-3") - #BBal_MACRMM2BM3
+   calculate :  #TotalBal = BBAL("2EB3")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EB3") / #TotalBal, BBAL("2EB3#1") )
+   calculate :  #BBal_2EB3 = BBAL("2EB3") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EB3")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2BI3") / #TotalBal, BBAL("2BI3#1") )
+   calculate :  #BBal_2BI3 = TBAL("2BI3") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EB3#1") - (BBAL("2EB1#1"))
+   calculate :  #BBal_MACRMM2BM3 = MAX(0,#BBal_MACRMM2BM3 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EB3#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") - BBAL("2EB3#1"))
+   calculate :  #BBal_MACRMM2BM3 = #BBal_MACRMM2BM3 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EB3#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #BBal_MACRMM2BM4 = MAX(0, #BBal_MACRMM2BM4 - (PRINCPMT("2EB1#1") - #RegPrinc_2EB1))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2B-4") - #BBal_MACRMM2BM4
+   calculate :  #TotalBal = BBAL("2EB4")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EB4") / #TotalBal, BBAL("2EB4#1") )
+   calculate :  #BBal_2EB4 = BBAL("2EB4") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EB4")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2BI4") / #TotalBal, BBAL("2BI4#1") )
+   calculate :  #BBal_2BI4 = TBAL("2BI4") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EB4#1") - (BBAL("2EB1#1"))
+   calculate :  #BBal_MACRMM2BM4 = MAX(0,#BBal_MACRMM2BM4 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EB4#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") - BBAL("2EB4#1"))
+   calculate :  #BBal_MACRMM2BM4 = #BBal_MACRMM2BM4 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EB4#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #BBal_MACRMM2CM2 = MAX(0, #BBal_MACRMM2CM2 - (PRINCPMT("2EC1#1") - #RegPrinc_2EC1))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2C-2") - #BBal_MACRMM2CM2
+   calculate :  #TotalBal = BBAL("2EC2")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EC2") / #TotalBal, BBAL("2EC2#1") )
+   calculate :  #BBal_2EC2 = BBAL("2EC2") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EC2")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2CI2") / #TotalBal, BBAL("2CI2#1") )
+   calculate :  #BBal_2CI2 = TBAL("2CI2") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EC2#1") - (BBAL("2EC1#1"))
+   calculate :  #BBal_MACRMM2CM2 = MAX(0,#BBal_MACRMM2CM2 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EC2#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EC1#1") - BBAL("2EC2#1"))
+   calculate :  #BBal_MACRMM2CM2 = #BBal_MACRMM2CM2 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EC2#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #BBal_MACRMM2CM3 = MAX(0, #BBal_MACRMM2CM3 - (PRINCPMT("2EC1#1") - #RegPrinc_2EC1))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2C-3") - #BBal_MACRMM2CM3
+   calculate :  #TotalBal = BBAL("2EC3")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EC3") / #TotalBal, BBAL("2EC3#1") )
+   calculate :  #BBal_2EC3 = BBAL("2EC3") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EC3")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2CI3") / #TotalBal, BBAL("2CI3#1") )
+   calculate :  #BBal_2CI3 = TBAL("2CI3") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EC3#1") - (BBAL("2EC1#1"))
+   calculate :  #BBal_MACRMM2CM3 = MAX(0,#BBal_MACRMM2CM3 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EC3#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EC1#1") - BBAL("2EC3#1"))
+   calculate :  #BBal_MACRMM2CM3 = #BBal_MACRMM2CM3 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EC3#1")
+------------------------------------
+!
+------------------------------------
+   calculate :  #BBal_MACRMM2CM4 = MAX(0, #BBal_MACRMM2CM4 - (PRINCPMT("2EC1#1") - #RegPrinc_2EC1))
+------------------------------------
+   calculate :  #BalReduc = BBAL("MACR-M2C-4") - #BBal_MACRMM2CM4
+   calculate :  #TotalBal = BBAL("2EC4")
+   calculate :  #TrBalReduc = MIN( #BalReduc * BBAL("2EC4") / #TotalBal, BBAL("2EC4#1") )
+   calculate :  #BBal_2EC4 = BBAL("2EC4") - #TrBalReduc
+------------------------------------
+  subject to :  CEILING (( #TrBalReduc ))
+         pay :  SEQUENTIAL ("2EC4")
+------------------------------------
+   calculate :  #TrBalReduc = MIN( #BalReduc * TBAL("2CI4") / #TotalBal, BBAL("2CI4#1") )
+   calculate :  #BBal_2CI4 = TBAL("2CI4") - #TrBalReduc
+------------------------------------
+!
+   calculate :  #MACRWD = BBAL("2EC4#1") - (BBAL("2EC1#1"))
+   calculate :  #BBal_MACRMM2CM4 = MAX(0,#BBal_MACRMM2CM4 - #MACRWD)
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ( "2EC4#1" )
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EC1#1") - BBAL("2EC4#1"))
+   calculate :  #BBal_MACRMM2CM4 = #BBal_MACRMM2CM4 + #MACRWU
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWU )
+         pay :  WRITEUP PRO_RATA ("2EC4#1")
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA1#1") - #RegPrinc_2EA1 + PRINCPMT("2EB1#1") - #RegPrinc_2EB1))
+         pay :  SEQUENTIAL ("2ED1#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED1#1") - (BBAL("2EA1#1") + BBAL("2EB1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED1#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA1#1") + BBAL("2EB1#1") - BBAL("2ED1#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED1#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA2#1") - #RegPrinc_2EA2 + PRINCPMT("2EB2#1") - #RegPrinc_2EB2))
+         pay :  SEQUENTIAL ("2ED2#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED2#1") - (BBAL("2EA2#1") + BBAL("2EB2#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED2#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA2#1") + BBAL("2EB2#1") - BBAL("2ED2#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED2#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA3#1") - #RegPrinc_2EA3 + PRINCPMT("2EB3#1") - #RegPrinc_2EB3))
+         pay :  SEQUENTIAL ("2ED3#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED3#1") - (BBAL("2EA3#1") + BBAL("2EB3#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED3#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA3#1") + BBAL("2EB3#1") - BBAL("2ED3#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED3#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EA4#1") - #RegPrinc_2EA4 + PRINCPMT("2EB4#1") - #RegPrinc_2EB4))
+         pay :  SEQUENTIAL ("2ED4#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED4#1") - (BBAL("2EA4#1") + BBAL("2EB4#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED4#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EA4#1") + BBAL("2EB4#1") - BBAL("2ED4#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED4#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2M2A#1") - #RegPrinc_2M2A + PRINCPMT("2M2B#1") - #RegPrinc_2M2B))
+         pay :  SEQUENTIAL ("2ED5#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2ED5#1") - (BBAL("2M2A#1") + BBAL("2M2B#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2ED5#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2M2A#1") + BBAL("2M2B#1") - BBAL("2ED5#1"))
+------------------------------------
+         pay :  INCREMENT ("2ED5#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB1#1") - #RegPrinc_2EB1 + PRINCPMT("2EC1#1") - #RegPrinc_2EC1))
+         pay :  SEQUENTIAL ("2EF1#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF1#1") - (BBAL("2EB1#1") + BBAL("2EC1#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF1#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB1#1") + BBAL("2EC1#1") - BBAL("2EF1#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF1#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB2#1") - #RegPrinc_2EB2 + PRINCPMT("2EC2#1") - #RegPrinc_2EC2))
+         pay :  SEQUENTIAL ("2EF2#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF2#1") - (BBAL("2EB2#1") + BBAL("2EC2#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF2#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB2#1") + BBAL("2EC2#1") - BBAL("2EF2#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF2#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB3#1") - #RegPrinc_2EB3 + PRINCPMT("2EC3#1") - #RegPrinc_2EC3))
+         pay :  SEQUENTIAL ("2EF3#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF3#1") - (BBAL("2EB3#1") + BBAL("2EC3#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF3#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB3#1") + BBAL("2EC3#1") - BBAL("2EF3#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF3#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2EB4#1") - #RegPrinc_2EB4 + PRINCPMT("2EC4#1") - #RegPrinc_2EC4))
+         pay :  SEQUENTIAL ("2EF4#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF4#1") - (BBAL("2EB4#1") + BBAL("2EC4#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF4#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2EB4#1") + BBAL("2EC4#1") - BBAL("2EF4#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF4#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+  subject to :  CEILING ((PRINCPMT("2M2B#1") - #RegPrinc_2M2B + PRINCPMT("2M2C#1") - #RegPrinc_2M2C))
+         pay :  SEQUENTIAL ("2EF5#1")
+------------------------------------
+   calculate :  #MACRWD = BBAL("2EF5#1") - (BBAL("2M2B#1") + BBAL("2M2C#1"))
+------------------------------------
+        from :  SUBACCOUNT ( #MACRWD )
+         pay :  WRITEDOWN SEQUENTIAL ("2EF5#1")
+------------------------------------
+   calculate :  #MACRWU = MAX(0, BBAL("2M2B#1") + BBAL("2M2C#1") - BBAL("2EF5#1"))
+------------------------------------
+         pay :  INCREMENT ("2EF5#1", BY #MACRWU)
+------------------------------------
+!
+------------------------------------
+!
+ Schedule "SHIFT%"
+Declare
+60     0%    
+72     0%    
+84     0%    
+96     0%    
+108    0%    
+120    0%    
+!
+!
+ Collateral
+!
+!       Factor      --Delay--
+! Type   Date       P/Y    BV   Use BV for 0
+  WL  20170501    9999 9999   FALSE
+!
+! Pool#  Type     Gross     Current     Original   --Fee--  Maturity Orig
+!                 Coupon    Factor      Balance    P/Y  BV  P/Y   BV Term
+!! BEGINNING OF COLLATERAL
+M        1              WL    00    WAC              2.500 (       294059.41 /       294059.41 );       294059.41                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        2              WL    00    WAC              2.625 (      1619848.14 /      1619848.14 );      1619848.14                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        3              WL    00    WAC              2.750 (      6650731.50 /      6650731.50 );      6650731.50                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        4              WL    00    WAC              2.875 (      8624807.67 /      8624807.67 );      8624807.67                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        5              WL    00    WAC              2.999 (     21707090.27 /     21707090.27 );     21707090.27                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        6              WL    00    WAC              3.125 (    113528015.06 /    113528015.06 );    113528015.06                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        7              WL    00    WAC              3.250 (   1126956316.52 /   1126956316.52 );   1126956316.52                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        8              WL    00    WAC              3.374 (   3296500113.96 /   3296500113.96 );   3296500113.96                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        9              WL    00    WAC              3.498 (   6021098299.06 /   6021098299.06 );   6021098299.06                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        10             WL    00    WAC              3.624 (   5212670663.31 /   5212670663.31 );   5212670663.31                              0.           0.               355:4     355:4       359 NO_CHECK 
+M        11             WL    00    WAC              3.749 (   5023934381.56 /   5023934381.56 );   5023934381.56                              0.           0.               355:4     355:4       359 NO_CHECK 
+M        12             WL    00    WAC              3.875 (   3458445913.58 /   3458445913.58 );   3458445913.58                              0.           0.               355:4     355:4       359 NO_CHECK 
+M        13             WL    00    WAC              3.995 (   1762917933.13 /   1762917933.13 );   1762917933.13                              0.           0.               355:4     355:4       359 NO_CHECK 
+M        14             WL    00    WAC              4.124 (   1014961233.08 /   1014961233.08 );   1014961233.08                              0.           0.               355:4     355:4       359 NO_CHECK 
+M        15             WL    00    WAC              4.246 (   1099538061.43 /   1099538061.43 );   1099538061.43                              0.           0.               356:4     356:4       360 NO_CHECK 
+M        16             WL    00    WAC              4.375 (    675399498.07 /    675399498.07 );    675399498.07                              0.           0.               356:4     356:4       360 NO_CHECK 
+M        17             WL    00    WAC              4.499 (    492103180.86 /    492103180.86 );    492103180.86                              0.           0.               356:4     356:4       360 NO_CHECK 
+M        18             WL    00    WAC              4.624 (    305400437.65 /    305400437.65 );    305400437.65                              0.           0.               356:4     356:4       360 NO_CHECK 
+M        19             WL    00    WAC              4.749 (    191613084.98 /    191613084.98 );    191613084.98                              0.           0.               356:4     356:4       360 NO_CHECK 
+M        20             WL    00    WAC              4.875 (    174292408.19 /    174292408.19 );    174292408.19                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        21             WL    00    WAC              4.998 (    101164103.47 /    101164103.47 );    101164103.47                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        22             WL    00    WAC              5.124 (     22449770.16 /     22449770.16 );     22449770.16                              0.           0.               355:5     355:5       360 NO_CHECK 
+M        23             WL    00    WAC              5.250 (     11163645.86 /     11163645.86 );     11163645.86                              0.           0.               356:4     356:4       360 NO_CHECK 
+M        24             WL    00    WAC              5.375 (      7188740.59 /      7188740.59 );      7188740.59                              0.           0.               356:4     356:4       360 NO_CHECK 
+M        25             WL    00    WAC              5.500 (      2684731.62 /      2684731.62 );      2684731.62                              0.           0.               357:3     357:3       360 NO_CHECK 
+M        26             WL    00    WAC              5.505 (       390264.82 /       390264.82 );       390264.82                              0.           0.               356:4     356:4       360 NO_CHECK 
+M        27             WL    00    WAC              5.750 (       114509.81 /       114509.81 );       114509.81                              0.           0.               358:2     358:2       360 NO_CHECK 
+M        28             WL    00    WAC              5.900 (       320733.18 /       320733.18 );       320733.18                              0.           0.               356:4     356:4       360 NO_CHECK 
